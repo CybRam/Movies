@@ -1,1 +1,28 @@
+public static void main(String[] args) {
+		        String inputFile = "part1_manifest.txt"; // Path to the file you want to read from
+		        String outputFile = "Movies1990.csv"; // Path to the new file you want to create
+		        Scanner reader = null;
+		        PrintWriter writer = null;
+		        try {
+		            // Open the input file for reading
+		            reader = new Scanner(new FileReader(outputFile));
 
+		            // Open the output file for writing
+		            writer = new PrintWriter(new FileOutputStream(inputFile));
+
+		        } catch (IOException e) {
+		            System.out.println("An error occurred: " + e.getMessage());
+		            e.printStackTrace();
+		        }
+		        
+		        String line = null;
+		        int count = 0;
+		        
+		        while (reader.hasNextLine()) {
+		        	line = reader.nextLine();
+		        	count++;
+		        	writer.println(count+" "+line);
+	            }
+		        reader.close();
+		        writer.close();
+		    }
