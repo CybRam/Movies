@@ -23,7 +23,6 @@ public class Movie implements Serializable{
 
 	public Movie(int year, String title, int duration, String genres, String rating, double score, String director,
 			String actor1, String actor2, String actor3) {
-		super();
 		this.year = year;
 		this.title = title;
 		this.duration = duration;
@@ -34,6 +33,10 @@ public class Movie implements Serializable{
 		this.actor1 = actor1;
 		this.actor2 = actor2;
 		this.actor3 = actor3;
+	}
+	public Movie()
+	{
+		this(0000, "movie title", 0, "movie genre", "movie rating", 0.0, "movie director", "actor 1", "actor 2", "actor 3");
 	}
 
 
