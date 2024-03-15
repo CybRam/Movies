@@ -14,7 +14,18 @@ public static void main(String[] args) {
 		            System.out.println("An error occurred: " + e.getMessage());
 		            e.printStackTrace();
 		        }
-		        
+
+			int year = reader.nextInt();
+    		        String title = reader.next();
+    			int duration = reader.nextInt();
+    			String genres = reader.next();
+        		String rating = reader.next();
+        		double score = reader.nextDouble();
+        		String director = reader.next();
+        		String actor1 = reader.next();
+        		String actor2 = reader.next();
+        		String actor3 = reader.next();
+
 		        String line = null;
 		        int count = 0;
 		        
