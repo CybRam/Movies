@@ -1,13 +1,17 @@
 // -----------------------------------------------------
 // Assignment 2
 // Question: 3
-// Written by: James Bautista
+// Written by: James Bautista and Ramiro Juarez
 // -----------------------------------------------------
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.util.Scanner;
 
 public class Movie implements Serializable{
 	private int year;
@@ -33,10 +37,6 @@ public class Movie implements Serializable{
 		this.actor1 = actor1;
 		this.actor2 = actor2;
 		this.actor3 = actor3;
-	}
-	public Movie()
-	{
-		this(0000, "movie title", 0, "movie genre", "movie rating", 0.0, "movie director", "actor 1", "actor 2", "actor 3");
 	}
 
 
@@ -175,6 +175,10 @@ public class Movie implements Serializable{
 
 	public static void main(String[] args) {
 		
+  
+		
+
+		
 		// part 1's manifest file
 		String part1_manifest = "part1_manifest.txt";
 		
@@ -182,20 +186,66 @@ public class Movie implements Serializable{
 		String part2_manifest = do_part1(part1_manifest);
 		
 		// part 3's manifest file
-		String part3_manifest = do_part2(part2_manifest);
+		String part3_manifest = do_part2(part1_manifest,part2_manifest);
+	
 	}
 
-
 	public static String do_part1(String part1_manifest) {
+		String inputFile = part1_manifest; // Path to the file you want to read from
+		String outputFile = "bad_movie_records.txt"; // Path to the new file you want to create
+		Scanner reader = null;
+		PrintWriter writer = null;
+		
+        try {
+        	// Open the input file for reading
+        	reader = new Scanner(new FileInputStream(inputFile));
+        	// Open the output file for writing
+        	writer = new PrintWriter(new FileOutputStream(outputFile));
+        	
+        	// read
+        	while(reader.hasNextLine()) {
+        		String line = reader.nextLine();
+        		checkBadMovieRecords(line);
+        		writer.println(line);
+        	}
+        	// close
+			reader.close();
+			writer.close();
+
+		} 
+        catch (IOException e) {
+        	System.out.println("An error occurred: " + e.getMessage());
+        	e.printStackTrace();
+        }
+        
 		return null;
 	}
 	
-	public static String do_part2(String part2_manifest) {
+	public static boolean checkBadMovieRecords(String line) {
+		boolean goodMovieRecords = false;
+		Scanner reader = null;
+		try {
+			// Open the input file for reading
+        	reader = new Scanner(new FileInputStream(line));        	
+        	if(reader.hasNextLine()) {
+        		goodMovieRecords = true;
+        	}
+        	reader.close();
+		}
+		catch (IOException e) {
+        	System.out.println("An error occurred: " + e.getMessage());
+        	e.printStackTrace();
+        }
+		return goodMovieRecords;
+	}
+	
+	public static String do_part2(String part1_manifest,String part2_manifest) {
+		String outputFile = part1_manifest; // Path to the new file you want to create
 		return null;
 	}
 	
 	public static String do_part3(String part2_manifest) {
 		return null;
 	}
+	
 }
-
