@@ -226,7 +226,8 @@ public class Movie implements Serializable{
 		Scanner reader = null;
 		try {
 			// Open the input file for reading
-        	reader = new Scanner(new FileInputStream(line));        	
+        	reader = new Scanner(new FileInputStream(line));
+		reader.useDelimiter(",");
         	if(reader.hasNextLine()) {
         		goodMovieRecords = true;
         	}
