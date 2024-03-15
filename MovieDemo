@@ -40,7 +40,8 @@ if(double <=10){
 String[] validGenres = {"musical", "comedy", "animation", "adventure", "drama",
         "crime", "biography", "horror", "action", "documentary", "fantasy",
         "mystery", "sci-fi", "family", "romance", "thriller", "western"};
-for(String genre : validGenre){
-if(genre.equals(genre)){
-writer.print(print);
+for(String movieGenre : validGenre){
+if(!genre.equals(movieGenre)){
+writer.print(movieGenre);
 }
+
