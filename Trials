@@ -26,3 +26,43 @@ public class CSVParser {
         System.out.println(token);
     }
 }
+
+
+
+
+
+
+import java.io.IOException;
+
+public class MovieRecordValidationException extends IOException {
+    private String errorType;
+    private String originalRecord;
+    private String inputFile;
+    private int lineNumber;
+
+    public MovieRecordValidationException(String message, String errorType, String originalRecord,
+                                          String inputFile, int lineNumber) {
+        super(message);
+        this.errorType = errorType;
+        this.originalRecord = originalRecord;
+        this.inputFile = inputFile;
+        this.lineNumber = lineNumber;
+    }
+
+    public String getErrorType() {
+        return errorType;
+    }
+
+    public String getOriginalRecord() {
+        return originalRecord;
+    }
+
+    public String getInputFile() {
+        return inputFile;
+    }
+
+    public int getLineNumber() {
+        return lineNumber;
+    }
+}
+
