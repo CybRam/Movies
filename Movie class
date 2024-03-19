@@ -39,6 +39,9 @@ public class Movie implements Serializable{
 		this.actor3 = actor3;
 	}
 
+	public Movie(Movie otherMovie){
+		this(otherMovie.year, otherMovie.title, otherMovie.duration, otherMovie.genres, otherMovie.rating, otherMovie.score, otherMovie.director, otherMovie.actor1, otherMovie.actor2, otherMovie.actor3);
+	}
 
 	public int getYear() {
 		return year;

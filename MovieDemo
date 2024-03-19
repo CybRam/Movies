@@ -1,58 +1,122 @@
 public static void main(String[] args) {
-		        String inputFile = "part1_manifest.txt"; // Path to the file you want to read from
-		        String outputFile = "Movies1990.csv"; // Path to the new file you want to create
-		        Scanner reader = null;
-		        PrintWriter writer = null;
-		        try {
-		            // Open the input file for reading
-		            reader = new Scanner(new FileReader(outputFile));
+		String inputFile = "Movies1990.csv"; // Path to the file you want to read from
+		String outputFile = "badMovieRecords.txt"; // Path to the new file you want to create
+		Scanner reader = null;
+		PrintWriter writer = null;
+		try {
+            reader = new Scanner(new FileInputStream(inputFile));
+            writer = new PrintWriter(new FileOutputStream(outputFile, true));
+//            reader.useDelimiter(",");
 
-		            // Open the output file for writing
-		            writer = new PrintWriter(new FileOutputStream(inputFile));
-
-		        } catch (IOException e) {
-		            System.out.println("An error occurred: " + e.getMessage());
-		            e.printStackTrace();
-		        }
-
-			int year = reader.nextInt();
-    		        String title = reader.next();
-    			int duration = reader.nextInt();
-    			String genres = reader.next();
-        		String rating = reader.next();
-        		double score = reader.nextDouble();
-        		String director = reader.next();
-        		String actor1 = reader.next();
-        		String actor2 = reader.next();
-        		String actor3 = reader.next();
-
-		        String line = null;
-		        int count = 0;
-		        
-		        while (reader.hasNextLine()) {
-		        	line = reader.nextLine();
-		        	count++;
-		        	writer.println(count+" "+line);
-	            }
-		        reader.close();
-		        writer.close();
+        } catch (FileNotFoundException e){
+			System.out.println("Problem opening files.");
+			System.exit(0);
+		}catch (IOException e) {
+            System.out.println("An error occurred: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        PrintWriter writerTry = null;
+        try
+		{
+			writerTry = new PrintWriter(new FileOutputStream("chicken.txt", true));
+		}
+		catch (FileNotFoundException e){
+		System.out.println("Problem opening files.");
+		System.exit(0);
+		}
+        
+        while(reader.hasNextLine())
+		{
+			String line = reader.nextLine();
+//			Scanner lineScanner = new Scanner(line);
+			if(validateMovie(line)){
+				writer.println(line);
+			}
+			else
+			{				
+				writerTry.println(line);
+			}
+		}
+        
+        
+        writerTry.close();
+        reader.close();
+        writer.close();
 		    }
 
-if(year < 1990 || year > 1999){
-	writer.print(year);
-}
-if(duration < 30 || duration > 300){
-	writer.print(duration);
-}
-if(double <=10){
-	writer.print(score);
-}
-//List of valid genres
-String[] validGenres = {"musical", "comedy", "animation", "adventure", "drama",
-        "crime", "biography", "horror", "action", "documentary", "fantasy",
-        "mystery", "sci-fi", "family", "romance", "thriller", "western"};
-for(String movieGenre : validGenre){
-if(!genre.equals(movieGenre)){
-writer.print(movieGenre);
+// Validate Method
+public static boolean validateMovie(String line)
+{
+	boolean invalidRecord = false;
+	Scanner lineScanner = null;
+	
+	int year = 0;
+	String title = null;
+	int duration = 0;
+	String genre = null;
+	String rating = null;
+	double score = 0.0;
+	String director = null;
+	String actor1 = null;
+	String actor2 = null;
+	String actor3 = null;
+	String excess = null;
+
+	try{
+		lineScanner = new Scanner(line);
+		lineScanner.useDelimiter(",");
+		year = lineScanner.nextInt();
+		title = lineScanner.next();
+		duration = lineScanner.nextInt();
+		genre = lineScanner.next();
+		rating = lineScanner.next();
+		score = lineScanner.nextDouble();
+		director = lineScanner.next();
+		actor1 = lineScanner.next();
+		actor2 = lineScanner.next();
+		actor3 = lineScanner.next();
+		try{
+    	excess = lineScanner.next();
+    
+    	}catch(NoSuchElementException e) {
+		invalidRecord = false;
+		}	
+
+
+		if (!(title.startsWith("\"") && title.endsWith("\"")) || year < 1990 || year > 1999 || duration < 30 || duration > 300 || score > 10.0 || excess != null) {
+					invalidRecord = true;
+		} else {
+		String[] validGenres = {"musical", "comedy", "animation", "adventure", "drama",
+			"crime", "biography", "horror", "action", "documentary", "fantasy",
+			"mystery", "sci-fi", "family", "romance", "thriller", "western"};
+			boolean validRecord = true;
+			for(int i = 0; i < validGenres.length; i++){			
+				if(validGenres[i].equals(genre)){
+					validRecord = false;
+					break;
+				}
+				invalidRecord = validRecord;
+			}
+		}
+	}
+	catch(InputMismatchException e)
+	{
+		invalidRecord = true;
+	}
+	
+	return invalidRecord;
+	}
+
+	public static void createManifest1()
+	{
+		String fileMovieName = "Movies199";
+		PrintWriter outputStream = new PrintWriter(new FileOutputStream("part1_manifest"));
+
+		for(int i = 0; i < 9; i++)
+		{
+			outputStream.println(fileMovieName + )
+		}
+	}
 }
 
