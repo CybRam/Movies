@@ -11,79 +11,8 @@ public class MovieDriver2 {
 
     public static void main(String[] args) {
 
-	PrintWriter manifest1Writer = null;
-		try {
-			manifest1Writer = new PrintWriter(new FileOutputStream("part1_manifest.txt"));
-		}catch (FileNotFoundException e) {
-			System.out.println("problem creating file");
-		}
-		
-		for(int i = 0; i < 10; i++)
-		{
-			if(i == 9)
-			{
-				manifest1Writer.print("Movies199" + i);
-			}
-			else
-			manifest1Writer.println("Movies199" + i);
-		}		
-		manifest1Writer.close();
-	
-        String inputFile = "Movies1992.csv"; // Path to the file you want to read from
-        String outputFile = "bad_movie_records.txt"; // Path to the new file you want to create
-        Scanner reader = null;
-        PrintWriter writer = null;
-        try {
-            reader = new Scanner(new FileInputStream(inputFile));
-            writer = new PrintWriter(new FileOutputStream(outputFile));
+		doPart1()
 
-        } catch (FileNotFoundException e){
-			System.out.println("Problem opening files.");
-			System.exit(0);
-		}catch (IOException e) {
-            System.out.println("An error occurred: " + e.getMessage());
-            e.printStackTrace();
-        }
-        
-        PrintWriter writerTry = null;
-        try
-		{
-			writerTry = new PrintWriter(new FileOutputStream("chicken.txt"));
-		}
-		catch (FileNotFoundException e){
-		System.out.println("Problem opening files.");
-		System.exit(0);
-		}
-        
-        while(reader.hasNextLine())
-		{
-			String line = reader.nextLine();
-			try {
-				if(validateMovie(line)){
-					writer.println(line);
-				}
-				else
-				{				
-					writerTry.println(line);
-				}
-			} catch (BadYearException e) {
-				writer.println(line);
-			} catch (BadDurationException e) {
-				writer.println(line);
-			} catch (BadScoreException e) {
-				writer.println(line);
-			} catch (BadRatingException e) {
-				writer.println(line);
-			} catch (BadGenreException e) {
-				writer.println(line);
-			} catch (ExcessFieldsException e) {
-				writer.println(line);
-			}  
-		}
-        
-        writerTry.close();
-        reader.close();
-        writer.close();
 		}
 
     // Validate Method for semantic errors
@@ -227,6 +156,31 @@ String inputFile = "part1_manifest.txt"; // Path to the file you want to read fr
             System.out.println("An error occurred: " + e.getMessage());
             e.printStackTrace();
         }
+
+		// Create manifestpart2.txt //
+        PrintWriter manifest2Writer = null;
+        String[] genres = {"musical", "comedy", "animation", "adventure", "drama",
+				"crime", "biography", "horror", "action", "documentary", "fantasy",
+				"mystery", "sci-fi", "family", "romance", "thriller", "western"};
+        
+		try {
+			manifest2Writer = new PrintWriter(new FileOutputStream("part2_manifest.txt"));
+		}catch (FileNotFoundException e) {
+			System.out.println("problem creating file");
+		}
+		
+		for(int i = 0; i < genres.length; i++)
+		{
+			String word = genres[i].concat(".csv");
+			if (i == genres.length-1)
+			{
+				manifest2Writer.print(word);
+			}
+			else
+			manifest2Writer.println(word);
+		}		
+		manifest2Writer.close();
+		// End of create manifestpart2.txt //
         
         while(reader.hasNextLine()) {
         	String movieFile = reader.nextLine();
