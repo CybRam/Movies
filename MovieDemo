@@ -10,140 +10,34 @@ import java.io.FileOutputStream;
 public class MovieDriver2 {
 
     public static void main(String[] args) {
-
-		doPart1()
-
-		}
-
-    // Validate Method for semantic errors
-    public static boolean validateMovie(String line) throws BadYearException, BadDurationException, 
-    BadScoreException,BadRatingException,BadGenreException, ExcessFieldsException
-    {
-    	boolean invalidRecord = false;
-    	
-    	int year = 0;
-    	String title = null;
-    	int duration = 0;
-    	String genre = null;
-    	String rating = null;
-    	double score = 0.0;
-    	String director = null;
-    	String actor1 = null;
-    	String actor2 = null;
-    	String actor3 = null;
-    	String excess = null;
-    	
-    	String[] array = new String[10];
-    	// Initialize variables
-        String token = "";
-        boolean insideQuotes = false;
-        int j = 0;
-        try {
-        	// Iterate over each character in the CSV data
-            for (int i = 0; i< line.toCharArray().length;i++) {
-                if (line.toCharArray()[i] == '\"') {
-                    // Toggle the insideQuotes flag when encountering a double quote
-                    insideQuotes = !insideQuotes;
-                } else if ((line.toCharArray()[i] == ',' || i == line.toCharArray().length-1) && !insideQuotes) {
-                    // Found a comma outside of quotes, process the token
-                    array[j] = token;
-                    j++;
-                    token = ""; // Reset the token
-                } else {
-                    // Add the character to the current token
-                    token += line.toCharArray()[i];
-                }
-        }
-            try {
-            	
-            	year = Integer.parseInt(array[0]);
-            	
-        	}catch(NumberFormatException e) {
-        		throw new BadYearException();
-        	}
-            title = array[1];
-            try {
-            	
-            	duration = Integer.parseInt(array[2]);
-            	
-            }catch(NumberFormatException e) {
-        		throw new BadDurationException();
-        	}
-            genre = array[3];
-            rating = array[4];
-            try {
-            	
-            	score = Double.parseDouble(array[5]);
-            	
-            }catch(NumberFormatException e) {
-        		throw new BadScoreException();
-        	}
-            director = array[6];
-            actor1 = array[7];
-            actor2 = array[8];
-            actor3 = array[9];   
-             
-        }catch(IndexOutOfBoundsException e) {	
-        	
-			throw new ExcessFieldsException();
-        
-        }
-        
-        String[] validRatings = {"PG", "Unrated", "G", "R", "PG-13", "NC-17"};
-        String[] validGenres = {"musical", "comedy", "animation", "adventure", "drama",
-    	        "crime", "biography", "horror", "action", "documentary", "fantasy",
-    	        "mystery", "sci-fi", "family", "romance", "thriller", "western"};
-        
-        boolean validRating = false;
-    	boolean validGenre = false;
-    	
-    	for(int i = 0; i < validRatings.length; i++) {
-    		if(validRatings[i].equals(rating)){
-				validRating = true;
-			}
-    	}
-    	for(int i = 0; i < validGenres.length; i++){			
-			if(genre.equalsIgnoreCase(validGenres[i])){
-				validGenre = false;
-			}
-		}
-
-		
-    	if (year < 1990 || year > 1999) {
-    		
-    		throw new BadYearException();
-    		
-    	}
-    	else if (duration < 30 || duration > 300) {
-
-    		throw new BadDurationException();
-    		
-    	}
-    	else if(score > 10.0 ) {
-
-    		throw new BadScoreException();
-    		
-    	}else if(validRating == true) {
-
-    		throw new BadRatingException();
-    		
-    	} else if (validGenre == true){
-
-    		throw new BadGenreException();
-    		
-    	}
-    	
-    	return invalidRecord;
-    	}
-
-}
-
-String inputFile = "part1_manifest.txt"; // Path to the file you want to read from
+    	doPart1();	
+    }
+    
+    // Do part 1
+    public static void doPart1() {
+    	String inputFile = "part1_manifest.txt"; // Path to the file you want to read from
         String outputFile = "bad_movie_records.txt"; // Path to the new file you want to create
         Scanner reader = null;
         Scanner reader2 = null;
         PrintWriter writer = null;
         int count = 1;
+    	PrintWriter manifest1Writer = null;
+		try {
+			manifest1Writer = new PrintWriter(new FileOutputStream(inputFile));
+		}catch (FileNotFoundException e) {
+			System.out.println("problem creating file");
+		}
+		
+		for(int i = 0; i < 10; i++)
+		{
+			if(i == 9)
+			{
+				manifest1Writer.print("Movies199" + i + ".csv");
+			}
+			else
+			manifest1Writer.println("Movies199" + i + ".csv");
+		}		
+		manifest1Writer.close();
         
         try {
             reader = new Scanner(new FileInputStream(inputFile));
@@ -156,31 +50,6 @@ String inputFile = "part1_manifest.txt"; // Path to the file you want to read fr
             System.out.println("An error occurred: " + e.getMessage());
             e.printStackTrace();
         }
-
-		// Create manifestpart2.txt //
-        PrintWriter manifest2Writer = null;
-        String[] genres = {"musical", "comedy", "animation", "adventure", "drama",
-				"crime", "biography", "horror", "action", "documentary", "fantasy",
-				"mystery", "sci-fi", "family", "romance", "thriller", "western"};
-        
-		try {
-			manifest2Writer = new PrintWriter(new FileOutputStream("part2_manifest.txt"));
-		}catch (FileNotFoundException e) {
-			System.out.println("problem creating file");
-		}
-		
-		for(int i = 0; i < genres.length; i++)
-		{
-			String word = genres[i].concat(".csv");
-			if (i == genres.length-1)
-			{
-				manifest2Writer.print(word);
-			}
-			else
-			manifest2Writer.println(word);
-		}		
-		manifest2Writer.close();
-		// End of create manifestpart2.txt //
         
         while(reader.hasNextLine()) {
         	String movieFile = reader.nextLine();
@@ -194,6 +63,30 @@ String inputFile = "part1_manifest.txt"; // Path to the file you want to read fr
                 System.out.println("An error occurred: " + e.getMessage());
                 e.printStackTrace();
             }
+        	// Create manifestpart2.txt //
+            PrintWriter manifest2Writer = null;
+            String[] genres = {"musical", "comedy", "animation", "adventure", "drama",
+    				"crime", "biography", "horror", "action", "documentary", "fantasy",
+    				"mystery", "sci-fi", "family", "romance", "thriller", "western"};
+            
+    		try {
+    			manifest2Writer = new PrintWriter(new FileOutputStream("part2_manifest.txt"));
+    		}catch (FileNotFoundException e) {
+    			System.out.println("problem creating file");
+    		}
+    		
+    		for(int i = 0; i < genres.length; i++)
+    		{
+    			String word = genres[i]+".csv";
+    			if (i == genres.length-1)
+    			{
+    				manifest2Writer.print(word);
+    			}
+    			else
+    			manifest2Writer.println(word);
+    		}		
+    		manifest2Writer.close();
+    		// End of create manifestpart2.txt //
         
 	        writer.println(movieFile);
 			
@@ -203,6 +96,8 @@ String inputFile = "part1_manifest.txt"; // Path to the file you want to read fr
 				try {
 					if(validateMovie(line)){
 						writer.println(count + " " + line);
+					} else {
+						writeGenres(line);
 					}
 					count++;
 				}catch (MissingFieldsException e) {
@@ -251,3 +146,242 @@ String inputFile = "part1_manifest.txt"; // Path to the file you want to read fr
         reader2.close();
         reader.close();
         writer.close();
+    }
+    
+    // Validate Method for semantic errors
+    public static boolean validateMovie(String line) throws BadYearException, BadDurationException, 
+    BadScoreException,BadRatingException,BadGenreException, ExcessFieldsException, MissingFieldsException,
+    BadTitleException,BadNameException
+    {
+    	boolean invalidRecord = false;
+    	
+    	int year = 0;
+    	String title = null;
+    	int duration = 0;
+    	String genre = null;
+    	String rating = null;
+    	double score = 0.0;
+    	String director = null;
+    	String actor1 = null;
+    	String actor2 = null;
+    	String actor3 = null;
+    	String excess = null;
+    	
+    	String[] array = new String[10];
+    	// Initialize variables
+        String token = "";
+        boolean insideQuotes = false;
+        int j = 0;
+        try {
+        	// Iterate over each character in the CSV data
+            for (int i = 0; i< line.toCharArray().length;i++) {
+                if (line.toCharArray()[i] == '\"') {
+                    // Toggle the insideQuotes flag when encountering a double quote
+                    insideQuotes = !insideQuotes;
+                } else if ((line.toCharArray()[i] == ',' || i == line.toCharArray().length-1) && !insideQuotes) {
+                    // Found a comma outside of quotes, process the token
+                    array[j] = token;
+                    j++;
+                    token = ""; // Reset the token
+                } else {
+                    // Add the character to the current token
+                    token += line.toCharArray()[i];
+                }
+            }
+            for(int k = 0; k < array.length; k++) {
+            	if(array[k] == null) {
+            		
+            		throw new MissingFieldsException("Syntax error: Missing field(s)");
+            		
+            	}
+            }
+            
+            if(array[0].equals("")) {
+            	
+            	throw new BadYearException("Syntax error: Missing year");
+            	
+            } else if(array[1].equals("")) {
+            	
+            	throw new BadTitleException("Syntax error: Missing title");
+            	
+            } else if(array[2].equals("")) {
+            	
+            	throw new BadDurationException("Syntax error: Missing duration");
+            	
+            } else if(array[3].equals("")) {
+            	
+            	throw new BadGenreException("Syntax error: Missing genre");
+            	
+            } else if(array[4].equals("")) {
+            	
+            	throw new BadRatingException("Syntax error: Missing rating");
+            	
+            } else if(array[5].equals("")) {
+            	
+            	throw new BadScoreException("Syntax error: Missing score");
+            	
+            } else if(array[6].equals("")) {
+            	
+            	throw new BadNameException("Syntax error: Missing director's name");
+            	
+            } else if(array[7].equals("")) {
+            	
+            	throw new BadNameException("Syntax error: Missing actor's name");
+            	
+            } else if(array[8].equals("")) {
+            	
+            	throw new BadNameException("Syntax error: Missing actor's name");
+            	
+            } else if(array[9].equals("")) {
+            	
+            	throw new BadNameException("Syntax error: Missing actor's name");
+            	
+            }
+            
+            try {
+            	
+            	year = Integer.parseInt(array[0]);
+            	
+        	}catch(NumberFormatException e) {
+        		throw new BadYearException("Syntax error: Invalid year");
+        	}
+            title = array[1];
+            try {
+            	
+            	duration = Integer.parseInt(array[2]);
+            	
+            }catch(NumberFormatException e) {
+        		throw new BadDurationException("Syntax error: Invalid duration");
+        	}
+            genre = array[3];
+            rating = array[4];
+            try {
+            	
+            	score = Double.parseDouble(array[5]);
+            	
+            }catch(NumberFormatException e) {
+        		throw new BadScoreException();
+        	}
+            director = array[6];
+            actor1 = array[7];
+            actor2 = array[8];
+            actor3 = array[9];   
+             
+        }catch(IndexOutOfBoundsException e) {	
+        	
+			throw new ExcessFieldsException("Syntax error: Excess field(s)");
+        
+        }
+        
+        String[] validRatings = {"PG", "Unrated", "G", "R", "PG-13", "NC-17"};
+        
+        boolean validRating = false;
+        
+        for(int i = 0; i < validRatings.length; i++) {
+    		if(validRatings[i].equals(rating)){
+				validRating = true;
+			}
+    	}
+        
+        String[] validGenres = {"musical", "comedy", "animation", "adventure", "drama",
+    	        "crime", "biography", "horror", "action", "documentary", "fantasy",
+    	        "mystery", "sci-fi", "family", "romance", "thriller", "western"};  
+    	
+        boolean validGenre = false;
+    	
+    	for(int i = 0; i < validGenres.length; i++){			
+			if(genre.equalsIgnoreCase(validGenres[i])){
+				validGenre = true;
+			}
+		}
+    	
+    	if (year < 1990 || year > 1999) {
+    		
+    		throw new BadYearException("Semantic error: Invalid year");	
+    	
+    	}
+    	else if (duration < 30 || duration > 300) {
+
+    		throw new BadDurationException("Semantic error: Invalid duration");
+    		
+    	}
+    	else if(score > 10.0) {
+
+    		throw new BadScoreException("Semantic error: Invalid score");
+    		
+    	}else if(!validRating || rating == null) {
+
+    		throw new BadRatingException("Semantic error: Invalid rating");
+    		
+    	} else if (!validGenre || genre == null){
+
+    		throw new BadGenreException("Semantic error: Invalid genre");
+    		
+    	}
+    	
+    	return invalidRecord;
+    	}
+    
+    public static void writeGenres(String line) {
+    	String genre = null; 
+    	
+    	String[] array = new String[10];
+    	// Initialize variables
+        String token = "";
+        boolean insideQuotes = false;
+        int j = 0;
+    	// Iterate over each character in the CSV data
+        for (int i = 0; i< line.toCharArray().length;i++) {
+            if (line.toCharArray()[i] == '\"') {
+                // Toggle the insideQuotes flag when encountering a double quote
+                insideQuotes = !insideQuotes;
+            } else if ((line.toCharArray()[i] == ',' || i == line.toCharArray().length-1) && !insideQuotes) {
+                // Found a comma outside of quotes, process the token
+                array[j] = token;
+                j++;
+                token = ""; // Reset the token
+            } else {
+                // Add the character to the current token
+                token += line.toCharArray()[i];
+            }
+        }
+        
+        genre = array[3];
+        
+        String inputFile = "part2_manifest.txt";
+        Scanner reader = null;
+        PrintWriter writer = null;
+        
+        try {
+        	reader = new Scanner(new FileInputStream(inputFile));
+        	
+        } catch (FileNotFoundException e) {
+        	
+			System.out.println("problem creating file");
+			
+		}
+         
+        while(reader.hasNextLine()) {
+        	String outputFile = reader.nextLine();
+        	String genreFile = outputFile.replace(".csv","");
+        	try {
+    			
+    			writer = new PrintWriter(new FileOutputStream(outputFile,true));
+    			if(genreFile.equalsIgnoreCase(genre)) {
+            		
+        			writer.println(line);
+        		} 
+    			
+        	} catch (FileNotFoundException e) {
+        			
+        		System.out.println("problem creating file");
+        	}
+        		
+        	
+        }
+        
+        reader.close();
+        writer.close();
+        
+    }
+}
