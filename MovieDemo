@@ -189,3 +189,92 @@ public class MovieDriver2 {
     	}
 
 }
+
+String inputFile = "part1_manifest.txt"; // Path to the file you want to read from
+        String outputFile = "bad_movie_records.txt"; // Path to the new file you want to create
+        Scanner reader = null;
+        Scanner reader2 = null;
+        PrintWriter writer = null;
+        int count = 1;
+        
+        try {
+            reader = new Scanner(new FileInputStream(inputFile));
+            writer = new PrintWriter(new FileOutputStream(outputFile));
+
+        } catch (FileNotFoundException e){
+			System.out.println("Problem opening files");
+			System.exit(0);
+		} catch (IOException e) {
+            System.out.println("An error occurred: " + e.getMessage());
+            e.printStackTrace();
+        }
+        
+        while(reader.hasNextLine()) {
+        	String movieFile = reader.nextLine();
+        	
+        	try {
+        	reader2 = new Scanner(new FileInputStream(movieFile));
+        	} catch (FileNotFoundException e){
+    			System.out.println("Problem opening files");
+    			System.exit(0);
+    		}catch (IOException e) {
+                System.out.println("An error occurred: " + e.getMessage());
+                e.printStackTrace();
+            }
+        
+	        writer.println(movieFile);
+			
+	        while(reader2.hasNextLine())
+			{
+				String line = reader2.nextLine();
+				try {
+					if(validateMovie(line)){
+						writer.println(count + " " + line);
+					}
+					count++;
+				}catch (MissingFieldsException e) {
+					writer.println(count + " " + line);
+					writer.println(e.getMessage());
+					count++;
+				} catch (BadYearException e) {
+					writer.println(count + " " + line);
+					writer.println(e.getMessage());
+					count++;
+				} catch (BadDurationException e) {
+					writer.println(count + " " + line);
+					writer.println(e.getMessage());
+					count++;
+				} catch (BadScoreException e) {
+					writer.println(count + " " + line);
+					writer.println(e.getMessage());
+					count++;
+				} catch (BadRatingException e) {
+					writer.println(count + " " + line);
+					writer.println(e.getMessage());
+					count++;
+
+				} catch (BadGenreException e) {
+					writer.println(count + " " + line);
+					writer.println(e.getMessage());
+					count++;
+				} catch (ExcessFieldsException e) {
+					writer.println(count + " " + line);
+					writer.println(e.getMessage());
+					count++;
+				} catch (BadTitleException e) {
+					writer.println(count + " " + line);
+					writer.println(e.getMessage());
+					count++;
+				} catch (BadNameException e) {
+					writer.println(count + " " + line);
+					writer.println(e.getMessage());	
+					count++;
+				} 
+				
+			}
+	        count = 1;
+        }
+        
+        reader2.close();
+        reader.close();
+        writer.close();
