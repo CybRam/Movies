@@ -1,0 +1,43 @@
+public static Movie[][] do_part3() {
+    	Scanner reader = null;
+    	ObjectInputStream reader2 = null;
+    	String inputFile = "part3_manifest.txt";
+    	int genreFiles = 17;
+    	Movie[][] all_movies = new Movie[genreFiles][];
+    	
+    	
+    	try {
+    		reader = new Scanner(new FileInputStream(inputFile));
+    		int index2 = 0;
+    		int index = 0;
+    		
+    		while(reader.hasNextLine()) {
+    			String line = reader.nextLine();
+        		reader2 = new ObjectInputStream(new FileInputStream(line));        		
+        	
+        		Movie[] movies = (Movie[]) reader2.readObject();
+        		reader2.close();
+        		
+        		all_movies[index] = movies;
+
+                index++;
+    		}
+    	
+    	} catch (ClassNotFoundException e) {
+    		
+			System.out.println("Class not Found Exception");
+    		System.exit(0);
+    		
+    	} catch (FileNotFoundException e){
+    		
+			System.out.println("Problem opening file");
+			System.exit(0);
+			
+    	} catch (IOException e) {
+    		
+    		System.exit(0);	
+    	}
+    	System.out.println(all_movies[1][172]+" ");
+    	
+    	return all_movies;
+    }
