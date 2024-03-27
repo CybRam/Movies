@@ -31,6 +31,7 @@ public static void do_part2()
 			 }
 			 
 			 Movie[] serialMovies = new Movie[1];
+			 int movieIndex = 0;
 			 while(genreReader.hasNextLine()) 
 			 {
 				 String line = genreReader.nextLine();
@@ -81,20 +82,17 @@ public static void do_part2()
 				 Movie someMovie = new Movie(Integer.parseInt(array[0]), array[1], Integer.parseInt(array[2]),
 						 array[3], array[4], Double.parseDouble(array[5]), array[6], array[7], array[8], array[9]);
 				 
-				 if (serialMovies.length == 1)
+				 if (movieIndex >= serialMovies.length)
 				 {
-					 serialMovies[0] = someMovie;
-				 }
-				 else
-				 {
-					 Movie[] newArray = new Movie[serialMovies.length + 1];
+					 Movie[] newArray = new Movie[serialMovies.length * 2];
 					 for(int i = 0; i < serialMovies.length; i++)
 					 {
 						 newArray[i] = serialMovies[i];
 					 }
-					 newArray[newArray.length - 1] = someMovie;
 					 serialMovies = newArray;
 				 }
+				 serialMovies[movieIndex] = someMovie;
+				 movieIndex++;
 			 }
 			 
 			 // serialMovies array is complete with all the movies and we can now
