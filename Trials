@@ -1,21 +1,16 @@
- // put it before do_part1 on the main
- 
+
  public static void refreshGenreCSV()
 	{
-        Scanner reader = null;
         PrintWriter writer = null;
         
-        try {
-        	reader = new Scanner(new FileInputStream("part2_manifest.txt"));
-        	
-        } catch (FileNotFoundException e) {
-        	
-			System.out.println("problem creating file");
-			
-		}
+        String[] genres = {"musical", "comedy", "animation", "adventure", "drama",
+				"crime", "biography", "horror", "action", "documentary", "fantasy",
+				"mystery", "sci-fi", "family", "romance", "thriller", "western"};
+
          
-        while(reader.hasNextLine()) {
-        	String outputFile = reader.nextLine();
+        for(int i = 0; i < genres.length; i++) 
+        {
+        	String outputFile = genres[i] + ".csv";
         	try {    			
     			writer = new PrintWriter(new FileOutputStream(outputFile));
     			
@@ -24,5 +19,4 @@
         	}        	
         }
         writer.close();
-        reader.close();
 	}
