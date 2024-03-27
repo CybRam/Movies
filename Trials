@@ -1,68 +1,28 @@
- public class CSVParser {
-    public static void main(String[] args) {
-        // Sample CSV data
-        String csvData = "1993,\"Blood In, Blood Out\",330,Crime,R,8,Taylor Hackford,Delroy Lindo,Jesse Borrego,Raymond Cruz";
-
-        // Initialize variables
-        String token = "";
-        boolean insideQuotes = false;
-
-        // Iterate over each character in the CSV data
-        for (char c : csvData.toCharArray()) {
-            if (c == '\"') {
-                // Toggle the insideQuotes flag when encountering a double quote
-                insideQuotes = !insideQuotes;
-            } else if (c == ',' && !insideQuotes) {
-                // Found a comma outside of quotes, process the token
-                System.out.println(token);
-                token = ""; // Reset the token
-            } else {
-                // Add the character to the current token
-                token += c;
-            }
+ // put it before do_part1 on the main
+ 
+ public static void refreshGenreCSV()
+	{
+        Scanner reader = null;
+        PrintWriter writer = null;
+        
+        try {
+        	reader = new Scanner(new FileInputStream("part2_manifest.txt"));
+        	
+        } catch (FileNotFoundException e) {
+        	
+			System.out.println("problem creating file");
+			
+		}
+         
+        while(reader.hasNextLine()) {
+        	String outputFile = reader.nextLine();
+        	try {    			
+    			writer = new PrintWriter(new FileOutputStream(outputFile));
+    			
+        	}catch (FileNotFoundException e) {        			
+        		System.out.println("problem creating file");
+        	}        	
         }
-
-        // Process the last token after the loop
-        System.out.println(token);
-    }
-}
-
-
-
-
-
-
-import java.io.IOException;
-
-public class MovieRecordValidationException extends IOException {
-    private String errorType;
-    private String originalRecord;
-    private String inputFile;
-    private int lineNumber;
-
-    public MovieRecordValidationException(String message, String errorType, String originalRecord,
-                                          String inputFile, int lineNumber) {
-        super(message);
-        this.errorType = errorType;
-        this.originalRecord = originalRecord;
-        this.inputFile = inputFile;
-        this.lineNumber = lineNumber;
-    }
-
-    public String getErrorType() {
-        return errorType;
-    }
-
-    public String getOriginalRecord() {
-        return originalRecord;
-    }
-
-    public String getInputFile() {
-        return inputFile;
-    }
-
-    public int getLineNumber() {
-        return lineNumber;
-    }
-}
-
+        writer.close();
+        reader.close();
+	}
