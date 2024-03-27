@@ -1,22 +1,130 @@
-
- public static void refreshGenreCSV()
-	{
-        PrintWriter writer = null;
-        
-        String[] genres = {"musical", "comedy", "animation", "adventure", "drama",
-				"crime", "biography", "horror", "action", "documentary", "fantasy",
-				"mystery", "sci-fi", "family", "romance", "thriller", "western"};
-
-         
-        for(int i = 0; i < genres.length; i++) 
-        {
-        	String outputFile = genres[i] + ".csv";
-        	try {    			
-    			writer = new PrintWriter(new FileOutputStream(outputFile));
-    			
-        	}catch (FileNotFoundException e) {        			
-        		System.out.println("problem creating file");
-        	}        	
-        }
-        writer.close();
-	}
+public static void do_part2()
+	 {
+		 Scanner manifest2Reader = null;
+		 PrintWriter manifest3Writer = null;
+		 try {
+		 manifest2Reader = new Scanner(new FileInputStream("part2_manifest.txt"));		 
+		 }
+		 catch (FileNotFoundException e)
+		 {
+			 System.out.println("File part2_manifest.txt was not found");
+			 System.out.println("or could not be opened");
+		 }
+		 
+		 try {
+			 manifest3Writer = new PrintWriter(new FileOutputStream("part3_manifest.txt"));
+		 }
+		 catch (FileNotFoundException e){
+			 System.out.println("File part3_manifest could not be created");
+		 }
+		 
+		 Scanner genreReader = null;
+		 ObjectOutputStream binaryGenre = null;
+		 while(manifest2Reader.hasNextLine())
+		 {
+			 String genreFile = manifest2Reader.nextLine();
+			 try {
+				 genreReader = new Scanner(new FileInputStream(genreFile));
+			 }catch (FileNotFoundException e){
+				 System.out.println("One of the genre.csv files was not found");
+				 System.out.println("or coulf not be opened");
+			 }
+			 
+			 Movie[] serialMovies = new Movie[1];
+			 while(genreReader.hasNextLine()) 
+			 {
+				 String line = genreReader.nextLine();
+				 
+				 if(line == null || line.equals(""))
+				 {
+					 String serFile = genreFile.replace(".csv", ".ser");
+					 try 
+					 {
+						 binaryGenre = new ObjectOutputStream(new FileOutputStream(serFile));
+					 }catch (FileNotFoundException e) {
+						 System.out.println("Error creating " + serFile + " .");
+					 }catch (IOException e){
+						 System.out.println("unexpected error trying to open " + serFile);
+					 }
+					 
+					 manifest3Writer.println(serFile);
+					 try {
+					 binaryGenre.close();
+					 continue;
+					 }catch(IOException e) {
+						 System.out.println("error closing BinaryGenre writer");
+					 }
+				 }
+				 
+				 String[] array = new String[10];
+				 // Initialize variables
+				 String token = "";
+				 boolean insideQuotes = false;
+				 int j = 0;
+				 // Iterate over each character in the CSV data
+				 for (int i = 0; i< line.toCharArray().length;i++) {
+					 if (line.toCharArray()[i] == '\"') {
+						 // Toggle the insideQuotes flag when encountering a double quote
+						 insideQuotes = !insideQuotes;
+					 } else if ((line.toCharArray()[i] == ',' || i == line.toCharArray().length-1) && !insideQuotes) {
+						 // Found a comma outside of quotes, process the token
+						 array[j] = token;
+						 j++;
+						 token = ""; // Reset the token
+					 } else {
+						 // Add the character to the current token
+						 token += line.toCharArray()[i];
+					 }
+				 }
+				 
+				 // use the "array" array to make a Movie object
+				 Movie someMovie = new Movie(Integer.parseInt(array[0]), array[1], Integer.parseInt(array[2]),
+						 array[3], array[4], Double.parseDouble(array[5]), array[6], array[7], array[8], array[9]);
+				 
+				 if (serialMovies.length == 1)
+				 {
+					 serialMovies[0] = someMovie;
+				 }
+				 else
+				 {
+					 Movie[] newArray = new Movie[serialMovies.length + 1];
+					 for(int i = 0; i < serialMovies.length; i++)
+					 {
+						 newArray[i] = serialMovies[i];
+					 }
+					 newArray[newArray.length - 1] = someMovie;
+					 serialMovies = newArray;
+				 }
+			 }
+			 
+			 // serialMovies array is complete with all the movies and we can now
+			 // proceed to serialize it
+			 String serFile = genreFile.replace(".csv", ".ser");
+			 try {
+				 binaryGenre = new ObjectOutputStream(new FileOutputStream(serFile));
+			 }catch(FileNotFoundException e){
+				 System.out.println("Error creating " + serFile + " .");
+			 }catch(IOException e){
+				 System.out.println("unexpected error trying to open " + serFile);
+			 }
+			 
+			 try {
+			 binaryGenre.writeObject(serialMovies);
+			 }catch(IOException e){
+				 System.out.println("error writing the object in the binary file");
+			 }
+			 
+			 manifest3Writer.println(serFile);
+			 
+			 try {
+				 binaryGenre.close();
+				 }catch(IOException e) {
+					 System.out.println("error closing BinaryGenre writer");
+				 }
+			 
+			 genreReader.close();
+		 }
+		 
+		 manifest3Writer.close();
+		 manifest2Reader.close();
+	 }
