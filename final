@@ -1,0 +1,985 @@
+import java.io.PrintWriter;
+import java.util.Scanner;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
+public class MovieDriver2 {
+
+    public static void main(String[] args) {
+    	
+    	refreshGenreCSV();
+    	do_part1();	
+    	do_part2();
+    	do_part3();
+    	menu(do_part3());
+    }
+    
+    // Do part 1
+    public static void do_part1() {
+    	String inputFile = "part1_manifest.txt"; // Path to the file you want to read from
+        String outputFile = "bad_movie_records.txt"; // Path to the new file you want to create
+        Scanner reader = null;
+        Scanner reader2 = null;
+        PrintWriter writer = null;
+        int count = 1;
+    	PrintWriter manifest1Writer = null;
+		try {
+			manifest1Writer = new PrintWriter(new FileOutputStream(inputFile));
+		}catch (FileNotFoundException e) {
+			System.out.println("problem creating file");
+		}
+		
+		for(int i = 0; i < 10; i++)
+		{
+			if(i == 9)
+			{
+				manifest1Writer.print("Movies199" + i + ".csv");
+			}
+			else
+			manifest1Writer.println("Movies199" + i + ".csv");
+		}		
+		manifest1Writer.close();
+        
+        try {
+            reader = new Scanner(new FileInputStream(inputFile));
+            writer = new PrintWriter(new FileOutputStream(outputFile));
+
+        } catch (FileNotFoundException e){
+			System.out.println("Problem opening files");
+			System.exit(0);
+        } 
+        
+        while(reader.hasNextLine()) {
+        	String movieFile = reader.nextLine();
+        	
+        	try {
+        	reader2 = new Scanner(new FileInputStream(movieFile));
+        	} catch (FileNotFoundException e){
+    			System.out.println("Problem opening file");
+    			System.exit(0);
+    		}
+        	// Create manifestpart2.txt //
+            PrintWriter manifest2Writer = null;
+            String[] genres = {"musical", "comedy", "animation", "adventure", "drama",
+    				"crime", "biography", "horror", "action", "documentary", "fantasy",
+    				"mystery", "sci-fi", "family", "romance", "thriller", "western"};
+            
+    		try {
+    			manifest2Writer = new PrintWriter(new FileOutputStream("part2_manifest.txt"));
+    		}catch (FileNotFoundException e) {
+    			System.out.println("problem creating file");
+    		}
+    		
+    		for(int i = 0; i < genres.length; i++)
+    		{
+    			String word = genres[i]+".csv";
+    			if (i == genres.length-1)
+    			{
+    				manifest2Writer.print(word);
+    			}
+    			else
+    			manifest2Writer.println(word);
+    		}		
+    		manifest2Writer.close();
+    		// End of create manifestpart2.txt //
+        
+	        writer.println(movieFile);
+			
+	        while(reader2.hasNextLine())
+			{
+				String line = reader2.nextLine();
+				try {
+					if(validateMovie(line)){
+						writer.println(count + " " + line);
+					} else {
+						writeGenres(line);
+					}
+					count++;
+				}catch (MissingFieldsException e) {
+					
+					writer.println(count + " " + line);
+					writer.println(e.getMessage());
+					count++;
+				} catch (BadYearException e) {
+					writer.println(count + " " + line);
+					writer.println(e.getMessage());
+					count++;
+				} catch (BadDurationException e) {
+					writer.println(count + " " + line);
+					writer.println(e.getMessage());
+					count++;
+				} catch (BadScoreException e) {
+					writer.println(count + " " + line);
+					writer.println(e.getMessage());
+					count++;
+				} catch (BadRatingException e) {
+					writer.println(count + " " + line);
+					writer.println(e.getMessage());
+					count++;
+
+				} catch (BadGenreException e) {
+					writer.println(count + " " + line);
+					writer.println(e.getMessage());
+					count++;
+				} catch (ExcessFieldsException e) {
+					writer.println(count + " " + line);
+					writer.println(e.getMessage());
+					count++;
+				} catch (BadTitleException e) {
+					writer.println(count + " " + line);
+					writer.println(e.getMessage());
+					count++;
+				} catch (BadNameException e) {
+					writer.println(count + " " + line);
+					writer.println(e.getMessage());	
+					count++;
+				} 
+				
+			}
+	        count = 1;
+        }
+        
+        reader2.close();
+        reader.close();
+        writer.close();
+    }
+    
+    // Validate Method for semantic errors
+    public static boolean validateMovie(String line) throws BadYearException, BadDurationException, 
+    BadScoreException,BadRatingException,BadGenreException, ExcessFieldsException, MissingFieldsException,
+    BadTitleException,BadNameException
+    {
+    	boolean invalidRecord = false;
+    	
+    	int year = 0;
+    	int duration = 0;
+    	String genre = null;
+    	String rating = null;
+    	double score = 0.0;
+    	
+    	String[] array = new String[10];
+    	// Initialize variables
+        String token = "";
+        boolean insideQuotes = false;
+        int j = 0;
+        try {
+        	// Iterate over each character in the CSV data
+            for (int i = 0; i< line.toCharArray().length;i++) {
+                if (line.toCharArray()[i] == '\"') {
+                    // Toggle the insideQuotes flag when encountering a double quote
+                    insideQuotes = !insideQuotes;
+                } else if ((line.toCharArray()[i] == ',' || i == line.toCharArray().length-1) && !insideQuotes) {
+                    // Found a comma outside of quotes, process the token
+                    array[j] = token;
+                    j++;
+                    token = ""; // Reset the token
+                } else {
+                    // Add the character to the current token
+                    token += line.toCharArray()[i];
+                }
+            }
+            for(int k = 0; k < array.length; k++) {
+            	if(array[k] == null) {
+            		
+            		throw new MissingFieldsException("Syntax error: Missing field(s)");
+            		
+            	}
+            }
+            
+            if(array[0].equals("")) {
+            	
+            	throw new BadYearException("Syntax error: Missing year");
+            	
+            } else if(array[1].equals("")) {
+            	
+            	throw new BadTitleException("Syntax error: Missing title");
+            	
+            } else if(array[2].equals("")) {
+            	
+            	throw new BadDurationException("Syntax error: Missing duration");
+            	
+            } else if(array[3].equals("")) {
+            	
+            	throw new BadGenreException("Syntax error: Missing genre");
+            	
+            } else if(array[4].equals("")) {
+            	
+            	throw new BadRatingException("Syntax error: Missing rating");
+            	
+            } else if(array[5].equals("")) {
+            	
+            	throw new BadScoreException("Syntax error: Missing score");
+            	
+            } else if(array[6].equals("")) {
+            	
+            	throw new BadNameException("Syntax error: Missing director's name");
+            	
+            } else if(array[7].equals("")) {
+            	
+            	throw new BadNameException("Syntax error: Missing actor's name");
+            	
+            } else if(array[8].equals("")) {
+            	
+            	throw new BadNameException("Syntax error: Missing actor's name");
+            	
+            } else if(array[9].equals("")) {
+            	
+            	throw new BadNameException("Syntax error: Missing actor's name");
+            	
+            }
+            
+            try {
+            	
+            	year = Integer.parseInt(array[0]);
+            	
+        	}catch(NumberFormatException e) {
+        		throw new BadYearException("Syntax error: Invalid year");
+        	}
+            try {
+            	
+            	duration = Integer.parseInt(array[2]);
+            	
+            }catch(NumberFormatException e) {
+        		throw new BadDurationException("Syntax error: Invalid duration");
+        	}
+            genre = array[3];
+            rating = array[4];
+            try {
+            	
+            	score = Double.parseDouble(array[5]);
+            	
+            }catch(NumberFormatException e) {
+        		throw new BadScoreException();
+        	}   
+             
+        }catch(IndexOutOfBoundsException e) {	
+        	
+			throw new ExcessFieldsException("Syntax error: Excess field(s)");
+        
+        }
+        
+        String[] validRatings = {"PG", "Unrated", "G", "R", "PG-13", "NC-17"};
+        
+        boolean validRating = false;
+        
+        for(int i = 0; i < validRatings.length; i++) {
+    		if(validRatings[i].equals(rating)){
+				validRating = true;
+			}
+    	}
+        
+        String[] validGenres = {"musical", "comedy", "animation", "adventure", "drama",
+    	        "crime", "biography", "horror", "action", "documentary", "fantasy",
+    	        "mystery", "sci-fi", "family", "romance", "thriller", "western"};  
+    	
+        boolean validGenre = false;
+    	
+    	for(int i = 0; i < validGenres.length; i++){			
+			if(genre.equalsIgnoreCase(validGenres[i])){
+				validGenre = true;
+			}
+		}
+    	
+    	if (year < 1990 || year > 1999) {
+    		
+    		throw new BadYearException("Semantic error: Invalid year");	
+    	
+    	}
+    	else if (duration < 30 || duration > 300) {
+
+    		throw new BadDurationException("Semantic error: Invalid duration");
+    		
+    	}
+    	else if(score > 10.0) {
+
+    		throw new BadScoreException("Semantic error: Invalid score");
+    		
+    	}else if(!validRating || rating == null) {
+
+    		throw new BadRatingException("Semantic error: Invalid rating");
+    		
+    	} else if (!validGenre || genre == null){
+
+    		throw new BadGenreException("Semantic error: Invalid genre");
+    		
+    	}
+    	
+    	return invalidRecord;
+    	}
+    
+    // Write movies in csv files
+    public static void writeGenres(String line) {
+    	String genre = null; 
+    	
+    	String[] array = new String[10];
+    	// Initialize variables
+        String token = "";
+        boolean insideQuotes = false;
+        int j = 0;
+    	// Iterate over each character in the CSV data
+        for (int i = 0; i< line.toCharArray().length;i++) {
+            if (line.toCharArray()[i] == '\"') {
+                // Toggle the insideQuotes flag when encountering a double quote
+                insideQuotes = !insideQuotes;
+            } else if ((line.toCharArray()[i] == ',' || i == line.toCharArray().length-1) && !insideQuotes) {
+                // Found a comma outside of quotes, process the token
+                array[j] = token;
+                j++;
+                token = ""; // Reset the token
+            } else {
+                // Add the character to the current token
+                token += line.toCharArray()[i];
+            }
+        }
+        
+        genre = array[3];
+        
+        String inputFile = "part2_manifest.txt";
+        Scanner reader = null;
+        PrintWriter writer = null;
+        
+        try {
+        	reader = new Scanner(new FileInputStream(inputFile));
+        	
+        } catch (FileNotFoundException e) {
+        	
+			System.out.println("problem creating file");
+			
+		}
+         
+        while(reader.hasNextLine()) {
+        	String outputFile = reader.nextLine();
+        	String genreFile = outputFile.replace(".csv","");
+        	try {
+    			
+    			writer = new PrintWriter(new FileOutputStream(outputFile,true));
+    			
+                    if(genreFile.equalsIgnoreCase(genre)) {
+	            		
+	        			writer.println(line);
+	        			break;
+                    }
+    			
+        	} catch (FileNotFoundException e) {
+        			
+        		System.out.println("problem creating file");
+        	}
+        		
+        	
+        }
+        
+        reader.close();
+        writer.close();
+        
+    }
+
+    public static void refreshGenreCSV()
+   	{
+           PrintWriter writer = null;
+           
+           String[] genres = {"musical", "comedy", "animation", "adventure", "drama",
+   				"crime", "biography", "horror", "action", "documentary", "fantasy",
+   				"mystery", "sci-fi", "family", "romance", "thriller", "western"};
+
+            
+           for(int i = 0; i < genres.length; i++) 
+           {
+           	String outputFile = genres[i] + ".csv";
+           	try {    			
+       			writer = new PrintWriter(new FileOutputStream(outputFile));
+       			
+           	}catch (FileNotFoundException e) {        			
+           		System.out.println("problem creating file");
+           	}        	
+           }
+           writer.close();
+   	}
+
+    public static void do_part2()
+	 {
+		 Scanner manifest2Reader = null;
+		 PrintWriter manifest3Writer = null;
+		 try {
+		 manifest2Reader = new Scanner(new FileInputStream("part2_manifest.txt"));		 
+		 }
+		 catch (FileNotFoundException e)
+		 {
+			 System.out.println("File part2_manifest.txt was not found");
+			 System.out.println("or could not be opened");
+		 }
+		 
+		 try {
+			 manifest3Writer = new PrintWriter(new FileOutputStream("part3_manifest.txt"));
+		 }
+		 catch (FileNotFoundException e){
+			 System.out.println("File part3_manifest could not be created");
+		 }
+		 
+		 Scanner genreReader = null;
+		 ObjectOutputStream binaryGenre = null;
+		 while(manifest2Reader.hasNextLine())
+		 {
+			 String genreFile = manifest2Reader.nextLine();
+			 try {
+				 genreReader = new Scanner(new FileInputStream(genreFile));
+			 }catch (FileNotFoundException e){
+				 System.out.println("One of the genre.csv files was not found");
+				 System.out.println("or coulf not be opened");
+			 }
+			 
+			 Movie[] serialMovies = new Movie[1];
+			 int movieIndex = 0;
+			 while(genreReader.hasNextLine()) 
+			 {
+				 String line = genreReader.nextLine();
+				 
+				 if(line == null || line.equals(""))
+				 {
+					 String serFile = genreFile.replace(".csv", ".ser");
+					 try 
+					 {
+						 binaryGenre = new ObjectOutputStream(new FileOutputStream(serFile));
+					 }catch (FileNotFoundException e) {
+						 System.out.println("Error creating " + serFile + " .");
+					 }catch (IOException e){
+						 System.out.println("unexpected error trying to open " + serFile);
+					 }
+					 
+					 manifest3Writer.println(serFile);
+					 try {
+					 binaryGenre.close();
+					 continue;
+					 }catch(IOException e) {
+						 System.out.println("error closing BinaryGenre writer");
+					 }
+				 }
+				 
+				 String[] array = new String[10];
+				 // Initialize variables
+				 String token = "";
+				 boolean insideQuotes = false;
+				 int j = 0;
+				 // Iterate over each character in the CSV data
+				 for (int i = 0; i< line.toCharArray().length;i++) {
+					 if (line.toCharArray()[i] == '\"') {
+						 // Toggle the insideQuotes flag when encountering a double quote
+						 insideQuotes = !insideQuotes;
+					 } else if ((line.toCharArray()[i] == ',' || i == line.toCharArray().length-1) && !insideQuotes) {
+						 // Found a comma outside of quotes, process the token
+						 array[j] = token;
+						 j++;
+						 token = ""; // Reset the token
+					 } else {
+						 // Add the character to the current token
+						 token += line.toCharArray()[i];
+					 }
+				 }
+				 
+				 // use the "array" array to make a Movie object
+				 Movie someMovie = new Movie(Integer.parseInt(array[0]), array[1], Integer.parseInt(array[2]),
+						 array[3], array[4], Double.parseDouble(array[5]), array[6], array[7], array[8], array[9]);
+				 
+				 if (movieIndex >= serialMovies.length)
+				 {
+					 Movie[] newArray = new Movie[serialMovies.length+1];
+					 for(int i = 0; i < serialMovies.length; i++)
+					 {
+						 newArray[i] = serialMovies[i];
+					 }
+					 serialMovies = newArray;
+				 }
+				 serialMovies[movieIndex] = someMovie;
+				 movieIndex++;
+			 }
+			 
+			 // serialMovies array is complete with all the movies and we can now
+			 // proceed to serialize it
+			 String serFile = genreFile.replace(".csv", ".ser");
+			 try {
+				 binaryGenre = new ObjectOutputStream(new FileOutputStream(serFile));
+			 }catch(FileNotFoundException e){
+				 System.out.println("Error creating " + serFile + " .");
+			 }catch(IOException e){
+				 System.out.println("unexpected error trying to open " + serFile);
+			 }
+			 
+			 try {
+			 binaryGenre.writeObject(serialMovies);
+			 }catch(IOException e){
+				 System.out.println("error writing the object in the binary file");
+			 }
+			 
+			 manifest3Writer.println(serFile);
+			 
+			 try {
+				 binaryGenre.close();
+				 }catch(IOException e) {
+					 System.out.println("error closing BinaryGenre writer");
+				 }
+			 
+			 genreReader.close();
+		 }
+		 
+		 manifest3Writer.close();
+		 manifest2Reader.close();
+	 }
+    
+    public static Movie[][] do_part3() {
+    	Scanner reader = null;
+    	ObjectInputStream reader2 = null;
+    	String inputFile = "part3_manifest.txt";
+    	int genreFiles = 17;
+    	Movie[][] all_movies = new Movie[genreFiles][];
+    	
+    	
+    	try {
+    		reader = new Scanner(new FileInputStream(inputFile));
+    		int index = 0;
+    		
+    		while(reader.hasNextLine()) {
+    			String line = reader.nextLine();
+        		reader2 = new ObjectInputStream(new FileInputStream(line));        		
+        	
+        		Movie[] movies = (Movie[]) reader2.readObject();
+        		reader2.close();
+        		
+        		all_movies[index] = movies;
+
+                index++;
+    		}
+    	
+    	} catch (ClassNotFoundException e) {
+    		
+			System.out.println("Class not Found Exception");
+    		System.exit(0);
+    		
+    	} catch (FileNotFoundException e){
+    		
+			System.out.println("Problem opening file");
+			System.exit(0);
+			
+    	} catch (IOException e) {
+    		
+    		System.exit(0);	
+    	}
+    	
+    	return all_movies;
+    }
+
+    public static void displayGenreMenu()
+	 {
+		 Movie[][] movies = do_part3();
+		 String[] genres = {"musical", "comedy", "animation", "adventure", "drama",
+				 "crime", "biography", "horror", "action", "documentary", "fantasy",
+				 "mystery", "sci-fi", "family", "romance", "thriller", "western"};
+
+
+			System.out.println("\n------------------------------");
+			System.out.println("\tGenre Sub-Menu");
+			System.out.println("------------------------------");				
+			for(int i = 0; i < genres.length; i++)
+			{
+				if(movies[i][0] == null)
+				{
+					System.out.println((i+1) + " " + genres[i] + " \t\t(0 Movies)");
+				}
+				else
+				System.out.println((i+1) + " " + genres[i] + " \t\t(" + (movies[i].length) + " Movies)");
+			}
+			System.out.println("18 Exit");
+			System.out.println("------------------------------");
+									
+	 }
+
+
+    public static void menu(Movie[][] do_part3) {
+        Movie[][] movies = do_part3;
+        boolean notFirstTime = false;
+        Scanner scanner = new Scanner(System.in);
+        int genreChoice = 0;
+        String choice = "";
+        String[] genres = {"musical", "comedy", "animation", "adventure", "drama",
+                "crime", "biography", "horror", "action", "documentary", "fantasy",
+                "mystery", "sci-fi", "family", "romance", "thriller", "western"};
+        int choice1 = 0;
+    	int choice2 = 0;
+    	int choice3 = 0;
+    	int choice4 = 0;
+    	int choice5 = 0;
+    	int choice6 = 0;
+    	int choice7 = 0;
+    	int choice8 = 0;
+    	int choice9 = 0;
+    	int choice10 = 0;
+    	int choice11 = 0;
+    	int choice12 = 0;
+    	int choice13 = 0;
+    	int choice14 = 0;
+    	int choice15 = 0;
+    	int choice16 = 0;
+    	int choice17 = 0;
+    	int[] choices2 = {choice1,choice2,choice3,choice4,choice5,choice6,choice7,choice8,choice9,choice10,choice11,choice12,choice13,choice14,choice15,choice16,choice17};
+
+        do {			
+            System.out.println("----------------------------");
+            System.out.println("\t"+"Main Menu");
+            System.out.println("----------------------------");
+            System.out.println(" s  "+"Select a movie array to navigate");
+            String genre2 = "";
+            if(notFirstTime) {
+                genre2 = genres[genreChoice-1];
+                if(movies[genreChoice-1][0] == null) {
+                    System.out.println(" n  Navigate " + genre2 + " movies (" + (movies[genreChoice-1].length-1) + " records)");
+                } else {
+                    System.out.println(" n  Navigate " + genre2 + " movies (" + (movies[genreChoice-1].length) + " records)");
+                }
+            } else {
+                System.out.println(" n  Navigate musical movies (" + (movies[0].length-1) + " records)");	    		
+            }
+            System.out.println(" x  "+"Exit");
+            System.out.println("----------------------------\n");
+
+            System.out.print("Enter Your Choice: ");
+            choice = scanner.next();
+            notFirstTime = true;
+
+            switch(choice.toLowerCase()) {
+                case "s":
+                    displayGenreMenu();
+                    System.out.print("Enter Your Choice: ");
+                    genreChoice = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+                    break;
+                case "n":
+                	if(movies[genreChoice-1][0] == null) {
+                		System.out.println("\nNavigating " + genre2 + "movies (" + (movies[genreChoice-1].length-1) + ")" );
+                    } else {
+                		System.out.println("\nNavigating " + genre2 + "movies (" + (movies[genreChoice-1].length) + ")" );
+                    }
+                    System.out.print("Enter Your Choice: ");
+                    int choice_n = scanner.nextInt();
+                    choices2 = navigate(choice_n,movies,genreChoice,choice1,choice2,choice3,choice4,choice5,choice6,choice7,choice8,choice9,choice10,choice11,choice12,choice13,choice14,choice15,choice16,choice17);
+                    break;
+                case "x":
+                    // Handle exit option
+                    break;
+            }
+        } while(!choice.equals("x"));
+        scanner.close();
+    }
+
+    public static int[] navigate(int choice_n, Movie[][] movies, int genreChoice,int choice1,int choice2,int choice3,int choice4,int choice5,
+    		int choice6,int choice7,int choice8,int choice9,int choice10,int choice11,int choice12,int choice13,int choice14,int choice15,
+    		int choice16,int choice17) {
+   
+    	int[] choices = {choice1,choice2,choice3,choice4,choice5,choice6,choice7,choice8,choice9,choice10,choice11,choice12,choice13,choice14,choice15,choice16,choice17};
+
+    	if(choice_n == 0) {
+    		return choices;
+    	// Code block 1
+    	} else if (choice_n > 0 && genreChoice - 1 == 0 && (choice_n + choice1 < movies[genreChoice - 1].length)) {
+		    for (int i = choice1; i < choice1 + choice_n; i++) {
+		        System.out.println(movies[genreChoice - 1][i]);
+		    }
+		    choice1 += choice_n;
+		} else if (choice_n < 0 && genreChoice - 1 == 0 && (choice_n + choice1 > -1)) {
+		    choice_n = -choice_n;
+		    for (int i = choice1; i > choice1 + choice_n; i--) {
+		        System.out.println(movies[genreChoice - 1][i]);
+		    }
+		    choice1 -= choice_n;
+		} else if (choice_n + choice1 > movies[genreChoice - 1].length) {
+		    System.out.println("EOF has been reached");
+return choices;
+		} else if (choice_n + choice1 < 0) {
+		    System.out.println("BOF has been reached");
+return choices;
+		} 
+    	// Code block 2
+    	else if (choice_n > 0 && genreChoice - 1 == 1 && (choice_n + choice2 < movies[genreChoice - 1].length)) {
+		    for (int i = choice2; i < choice2 + choice_n; i++) {
+		        System.out.println(movies[genreChoice - 1][i]);
+		    }
+		    choice2 += choice_n;
+		} else if (choice_n < 0 && genreChoice - 1 == 1 && (choice_n + choice2 > -1)) {
+		    choice_n = -choice_n;
+		    for (int i = choice2; i > choice2 + choice_n; i--) {
+		        System.out.println(movies[genreChoice - 1][i]);
+		    }
+		    choice2 -= choice_n;
+		} else if (choice_n + choice2 > movies[genreChoice - 1].length) {
+		    System.out.println("EOF has been reached");
+return choices;
+		} else if (choice_n + choice2 < 0) {
+		    System.out.println("BOF has been reached");
+return choices;
+		// Code block 3
+		} else if (choice_n > 0 && genreChoice - 1 == 2 && (choice_n + choice3 < movies[genreChoice - 1].length)) {
+		    for (int i = choice3; i < choice3 + choice_n; i++) {
+		        System.out.println(movies[genreChoice - 1][i]);
+		    }
+		    choice3 += choice_n;
+		} else if (choice_n < 0 && genreChoice - 1 == 2 && (choice_n + choice3 > -1)) {
+		    choice_n = -choice_n;
+		    for (int i = choice3; i > choice3 + choice_n; i--) {
+		        System.out.println(movies[genreChoice - 1][i]);
+		    }
+		    choice3 -= choice_n;
+		} else if (choice_n + choice3 > movies[genreChoice - 1].length) {
+		    System.out.println("EOF has been reached");
+return choices;
+		} else if (choice_n + choice3 < 0) {
+		    System.out.println("BOF has been reached");
+return choices;
+		} 
+    	// Code block 4
+	      else if (choice_n > 0 && genreChoice - 1 == 3 && (choice_n + choice4 < movies[genreChoice - 1].length)) {
+		    for (int i = choice4; i < choice4 + choice_n; i++) {
+		        System.out.println(movies[genreChoice - 1][i]);
+		    }
+		    choice4 += choice_n;
+		} else if (choice_n < 0 && genreChoice - 1 == 3 && (choice_n + choice4 > -1)) {
+		    choice_n = -choice_n;
+		    for (int i = choice4; i > choice4 + choice_n; i--) {
+		        System.out.println(movies[genreChoice - 1][i]);
+		    }
+		    choice4 -= choice_n;
+		} else if (choice_n + choice4 > movies[genreChoice - 1].length) {
+		    System.out.println("EOF has been reached");
+return choices;
+		} else if (choice_n + choice4 < 0) {
+		    System.out.println("BOF has been reached");
+return choices;
+		} // Code block 5
+	      else if (choice_n > 0 && genreChoice - 1 == 4 && (choice_n + choice5 < movies[genreChoice - 1].length)) {
+		    for (int i = choice5; i < choice5 + choice_n; i++) {
+		        System.out.println(movies[genreChoice - 1][i]);
+		    }
+		    choice5 += choice_n;
+		} else if (choice_n < 0 && genreChoice - 1 == 4 && (choice_n + choice5 > -1)) {
+		    choice_n = -choice_n;
+		    for (int i = choice5; i > choice5 + choice_n; i--) {
+		        System.out.println(movies[genreChoice - 1][i]);
+		    }
+		    choice5 -= choice_n;
+		} else if (choice_n + choice5 > movies[genreChoice - 1].length) {
+		    System.out.println("EOF has been reached");
+return choices;
+		} else if (choice_n + choice5 < 0) {
+		    System.out.println("BOF has been reached");
+return choices;
+		} // Code block 6
+	      else if (choice_n > 0 && genreChoice - 1 == 5 && (choice_n + choice6 < movies[genreChoice - 1].length)) {
+		    for (int i = choice6; i < choice6 + choice_n; i++) {
+		        System.out.println(movies[genreChoice - 1][i]);
+		    }
+		    choice6 += choice_n;
+		} else if (choice_n < 0 && genreChoice - 1 == 5 && (choice_n + choice6 > -1)) {
+		    choice_n = -choice_n;
+		    for (int i = choice6; i > choice6 + choice_n; i--) {
+		        System.out.println(movies[genreChoice - 1][i]);
+		    }
+		    choice6 -= choice_n;
+		} else if (choice_n + choice6 > movies[genreChoice - 1].length) {
+		    System.out.println("EOF has been reached");
+return choices;
+		} else if (choice_n + choice6 < 0) {
+		    System.out.println("BOF has been reached");
+return choices;
+		} // Code block 7
+	      else if (choice_n > 0 && genreChoice - 1 == 6 && (choice_n + choice7 < movies[genreChoice - 1].length)) {
+		    for (int i = choice7; i < choice7 + choice_n; i++) {
+		        System.out.println(movies[genreChoice - 1][i]);
+		    }
+		    choice7 += choice_n;
+		} else if (choice_n < 0 && genreChoice - 1 == 6 && (choice_n + choice7 > -1)) {
+		    choice_n = -choice_n;
+		    for (int i = choice7; i > choice7 + choice_n; i--) {
+		        System.out.println(movies[genreChoice - 1][i]);
+		    }
+		    choice7 -= choice_n;
+		} else if (choice_n + choice7 > movies[genreChoice - 1].length) {
+		    System.out.println("EOF has been reached");
+		    return choices;
+		} else if (choice_n + choice7 < 0) {
+		    System.out.println("BOF has been reached");
+		    return choices;
+		} // Code block 8
+	      else if (choice_n > 0 && genreChoice - 1 == 7 && (choice_n + choice8 < movies[genreChoice - 1].length)) {
+		    for (int i = choice8; i < choice8 + choice_n; i++) {
+		        System.out.println(movies[genreChoice - 1][i]);
+		    }
+		    choice8 += choice_n;
+		} else if (choice_n < 0 && genreChoice - 1 == 7 && (choice_n + choice8 > -1)) {
+		    choice_n = -choice_n;
+		    for (int i = choice8; i > choice8 + choice_n; i--) {
+		        System.out.println(movies[genreChoice - 1][i]);
+		    }
+		    choice8 -= choice_n;
+		} else if (choice_n + choice8 > movies[genreChoice - 1].length) {
+		    System.out.println("EOF has been reached");
+		    return choices;
+		} else if (choice_n + choice8 < 0) {
+		    System.out.println("BOF has been reached");
+		    return choices;
+		} else if (choice_n > 0 && genreChoice-1 == 9 && (choice_n+choice9 < movies[genreChoice-1].length)) {
+    		for(int i = choice9; i < choice9+choice_n; i++) {
+    			System.out.println(movies[genreChoice-1][i]);
+    		}
+    		choice9 += choice_n;
+    	} else if (choice_n < 0 && genreChoice-1 == 9 && (choice_n+choice9 > -1)) {
+    		choice_n = -choice_n;
+    		for(int i = choice9 ; i > choice9+choice_n; i--) {
+    			System.out.println(movies[genreChoice-1][i]);
+    		}
+    		choice9 -= choice_n;
+    	} else if (choice_n+choice9 > movies[genreChoice-1].length) {
+    		System.out.println("EOF has been reached");
+		    return choices;
+    	} else if (choice_n+choice9 < 0) {
+    		System.out.println("BOF has been reached");
+		    return choices;
+    	} else if (choice_n > 0 && genreChoice-1 == 10 && (choice_n+choice10 < movies[genreChoice-1].length)) {
+    		for(int i = choice10; i < choice10+choice_n; i++) {
+    			System.out.println(movies[genreChoice-1][i]);
+    		}
+    		choice10 += choice_n;
+    	} else if (choice_n < 0 && genreChoice-1 == 10 && (choice_n+choice10 > -1)) {
+    		choice_n = -choice_n;
+    		for(int i = choice10 ; i > choice10+choice_n; i--) {
+    			System.out.println(movies[genreChoice-1][i]);
+    		}
+    		choice10 -= choice_n;
+    	} else if (choice_n+choice10 > movies[genreChoice-1].length) {
+    		System.out.println("EOF has been reached");
+		    return choices;
+    	} else if (choice_n+choice10 < 0) {
+    		System.out.println("BOF has been reached");
+		    return choices;
+    	} else if (choice_n > 0 && genreChoice-1 == 0 && (choice_n+choice11 < movies[genreChoice-1].length)) {
+    		for(int i = choice11; i < choice11+choice_n; i++) {
+    			System.out.println(movies[genreChoice-1][i]);
+    		}
+    		choice11 += choice_n;
+    	} else if (choice_n < 0 && genreChoice-1 == 0 && (choice_n+choice11 > -1)) {
+    		choice_n = -choice_n;
+    		for(int i = choice11 ; i > choice11+choice_n; i--) {
+    			System.out.println(movies[genreChoice-1][i]);
+    		}
+    		choice11 -= choice_n;
+    	} else if (choice_n+choice11 > movies[genreChoice-1].length) {
+    		System.out.println("EOF has been reached");
+		    return choices;
+    	} else if (choice_n+choice11 < 0) {
+    		System.out.println("BOF has been reached");
+		    return choices;
+    	} else if (choice_n > 0 && genreChoice-1 == 12 && (choice_n+choice12 < movies[genreChoice-1].length)) {
+    		for(int i = choice12; i < choice12+choice_n; i++) {
+    			System.out.println(movies[genreChoice-1][i]);
+    		}
+    		choice12 += choice_n;
+    	} else if (choice_n < 0 && genreChoice-1 == 12 && (choice_n+choice12 > -1)) {
+    		choice_n = -choice_n;
+    		for(int i = choice12 ; i > choice12+choice_n; i--) {
+    			System.out.println(movies[genreChoice-1][i]);
+    		}
+    		choice12 -= choice_n;
+    	} else if (choice_n+choice12 > movies[genreChoice-1].length) {
+    		System.out.println("EOF has been reached");
+		    return choices;
+    	} else if (choice_n+choice12 < 0) {
+    		System.out.println("BOF has been reached");
+		    return choices;
+    	} else if (choice_n > 0 && genreChoice-1 == 13 && (choice_n+choice13 < movies[genreChoice-1].length)) {
+    		for(int i = choice13; i < choice13+choice_n; i++) {
+    			System.out.println(movies[genreChoice-1][i]);
+    		}
+    		choice13 += choice_n;
+    	} else if (choice_n < 0 && genreChoice-1 == 13 && (choice_n+choice13 > -1)) {
+    		choice_n = -choice_n;
+    		for(int i = choice13 ; i > choice13+choice_n; i--) {
+    			System.out.println(movies[genreChoice-1][i]);
+    		}
+    		choice13 -= choice_n;
+    	} else if (choice_n+choice13 > movies[genreChoice-1].length) {
+    		System.out.println("EOF has been reached");
+		    return choices;
+    	} else if (choice_n+choice13 < 0) {
+    		System.out.println("BOF has been reached");
+		    return choices;
+    	} else if (choice_n > 0 && genreChoice-1 == 14 && (choice_n+choice14 < movies[genreChoice-1].length)) {
+    		for(int i = choice14; i < choice14+choice_n; i++) {
+    			System.out.println(movies[genreChoice-1][i]);
+    		}
+    		choice14 += choice_n;
+    	} else if (choice_n < 0 && genreChoice-1 == 14 && (choice_n+choice14 > -1)) {
+    		choice_n = -choice_n;
+    		for(int i = choice14 ; i > choice14+choice_n; i--) {
+    			System.out.println(movies[genreChoice-1][i]);
+    		}
+    		choice14 -= choice_n;
+    	} else if (choice_n+choice14 > movies[genreChoice-1].length) {
+    		System.out.println("EOF has been reached");
+		    return choices;
+    	} else if (choice_n+choice14 < 0) {
+    		System.out.println("BOF has been reached");
+		    return choices;
+    	} else if (choice_n > 0 && genreChoice-1 == 15 && (choice_n+choice15 < movies[genreChoice-1].length)) {
+    		for(int i = choice15; i < choice15+choice_n; i++) {
+    			System.out.println(movies[genreChoice-1][i]);
+    		}
+    		choice15 += choice_n;
+    	} else if (choice_n < 0 && genreChoice-1 == 15 && (choice_n+choice15 > -1)) {
+    		choice_n = -choice_n;
+    		for(int i = choice15 ; i > choice15+choice_n; i--) {
+    			System.out.println(movies[genreChoice-1][i]);
+    		}
+    		choice15 -= choice_n;
+    	} else if (choice_n+choice15 > movies[genreChoice-1].length) {
+    		System.out.println("EOF has been reached");
+		    return choices;
+    	} else if (choice_n+choice15 < 0) {
+    		System.out.println("BOF has been reached");
+		    return choices;
+    	} else if (choice_n > 0 && genreChoice-1 == 16 && (choice_n+choice16 < movies[genreChoice-1].length)) {
+    		for(int i = choice16; i < choice16+choice_n; i++) {
+    			System.out.println(movies[genreChoice-1][i]);
+    		}
+    		choice16 += choice_n;
+    	} else if (choice_n < 0 && genreChoice-1 == 16 && (choice_n+choice16 > -1)) {
+    		choice_n = -choice_n;
+    		for(int i = choice16 ; i > choice16+choice_n; i--) {
+    			System.out.println(movies[genreChoice-1][i]);
+    		}
+    		choice16 -= choice_n;
+    	} else if (choice_n+choice16 > movies[genreChoice-1].length) {
+    		System.out.println("EOF has been reached");
+		    return choices;
+    	} else if (choice_n+choice16 < 0) {
+    		System.out.println("BOF has been reached");
+		    return choices;
+    	} else if (choice_n > 0 && genreChoice-1 == 17 && (choice_n+choice17 < movies[genreChoice-1].length)) {
+    		for(int i = choice17; i < choice17+choice_n; i++) {
+    			System.out.println(movies[genreChoice-1][i]);
+    		}
+    		choice17 += choice_n;
+    	} else if (choice_n < 0 && genreChoice-1 == 17 && (choice_n+choice17 > -1)) {
+    		choice_n = -choice_n;
+    		for(int i = choice17 ; i > choice17+choice_n; i--) {
+    			System.out.println(movies[genreChoice-1][i]);
+    		}
+    		choice17 -= choice_n;
+    	} else if (choice_n+choice17 > movies[genreChoice-1].length) {
+    		System.out.println("EOF has been reached");
+		    return choices;
+    	} else if (choice_n+choice17 < 0) {
+    		System.out.println("BOF has been reached");
+		    return choices;
+    	}
+	    return choices;
+    }
+}
