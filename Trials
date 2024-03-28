@@ -1,79 +1,26 @@
-public static void displayGenreMenu()
-	 {
-		 Scanner key = new Scanner(System.in);
-		 Movie[][] movies = do_part3();
-		 String[] genres = {"musical", "comedy", "animation", "adventure", "drama",
-				 "crime", "biography", "horror", "action", "documentary", "fantasy",
-				 "mystery", "sci-fi", "family", "romance", "thriller", "western"};
+/**
+ * @authors  Ramiro Juarez (40284034) & James Bautista ()
+ * @version Assignment 2
+ * @since 2024-03-27
+ */
 
+/**
+	 * checks if a movie record has any errors, then throws a specific error.
+	 * If it has semantic errors it returns true.
+	 * @param line
+	 * @return
+	 * @throws BadYearException
+	 * @throws BadTitleException
+	 * @throws BadDurationException
+	 * @throws BadScoreException
+	 * @throws BadRatingException
+	 * @throws BadGenreException
+	 * @throws BadNameException
+	 * @throws ExcessFieldsException
+	 * @throws MissingFieldsException
+	 */
 
-			System.out.println("------------------------------");
-			System.out.println("\tGenre Sub-Menu");
-			System.out.println("------------------------------");				
-			for(int i = 0; i < genres.length; i++)
-			{
-				if(movies[i][0] == null)
-				{
-					System.out.println((i+1) + " " + genres[i] + " \t\t(0 Movies)");
-				}
-				else
-				System.out.println((i+1) + " " + genres[i] + " \t\t(" + (movies[i].length) + " Movies)");
-			}
-			System.out.println("18 Exit");
-			System.out.println("------------------------------");
-						
-			key.close();			
-	 }
-
-
-	 public static void menu(Movie[][] do_part3) {
-
-			Movie[][] movies = do_part3;
-			boolean notFirstTime = false;
-			Scanner scanner = new Scanner(System.in);
-			int genreChoice = 0;
-			String choice = "";
-			String[] genres = {"musical", "comedy", "animation", "adventure", "drama",
-					"crime", "biography", "horror", "action", "documentary", "fantasy",
-					"mystery", "sci-fi", "family", "romance", "thriller", "western"};
-			
-			do {			
-				System.out.println("----------------------------");
-				System.out.println("\t"+"Main Menu");
-				System.out.println("----------------------------");
-				System.out.println(" s  "+"Select a movie array to navigate");
-				if(notFirstTime) {
-					String genre2 = genres[genreChoice-1];
-					if(movies[genreChoice-1][0] == null)
-					{
-						System.out.println(" n Navigate " + genre2 + " movies (" + (movies[genreChoice-1].length-1) + " recocrds)");
-					}
-					else
-						System.out.println(" n Navigate " + genre2 + " movies (" + (movies[genreChoice-1].length) + " recocrds)");
-				} else {
-					System.out.println(" n Navigate musical movies (" + (movies[0].length-1) + "recocrds)");	    		
-				}
-				System.out.println(" x  "+"Exit");
-				System.out.println("----------------------------\n");
-
-				System.out.print("Enter Your Choice: ");
-				choice = scanner.next();
-				notFirstTime = true;
-
-				switch(choice.toLowerCase()){
-				case "s":
-					displayGenreMenu();
-					System.out.print("Enter Your Choice: ");
-					scanner.next();
-					genreChoice = scanner.nextInt();
-					break;
-				case "n":
-
-					break;
-				case "x":
-					break;
-				}
-			}while(!choice.equals("x"));
-	    	scanner.close();
-
-	    }
+	/**
+	 * creates manifest part 1, reads it and then handles the exceptions thrown by validateMovie().
+	 * 
+	 */
