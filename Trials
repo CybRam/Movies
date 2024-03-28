@@ -1,12 +1,12 @@
-public static int displayGenreMenu()
+public static void displayGenreMenu()
 	 {
 		 Scanner key = new Scanner(System.in);
 		 Movie[][] movies = do_part3();
-			String[] genres = {"musical", "comedy", "animation", "adventure", "drama",
-					"crime", "biography", "horror", "action", "documentary", "fantasy",
-					"mystery", "sci-fi", "family", "romance", "thriller", "western"};
-			
-			
+		 String[] genres = {"musical", "comedy", "animation", "adventure", "drama",
+				 "crime", "biography", "horror", "action", "documentary", "fantasy",
+				 "mystery", "sci-fi", "family", "romance", "thriller", "western"};
+
+
 			System.out.println("------------------------------");
 			System.out.println("\tGenre Sub-Menu");
 			System.out.println("------------------------------");				
@@ -21,38 +21,59 @@ public static int displayGenreMenu()
 			}
 			System.out.println("18 Exit");
 			System.out.println("------------------------------");
-			
-			int choice = key.nextInt();			
+						
 			key.close();			
-			return choice;
 	 }
 
-public static void menu(Movie[][] do_part3) {
-    	Scanner scanner = new Scanner(System.in);
-    	System.out.println("----------------------------");
-    	System.out.println("\t"+"Main Menu");
-    	System.out.println("----------------------------");
-    	System.out.println(" s  "+"Select a movie array to navigate");
-    	//option_n
-    	System.out.println(" x  "+"Exit");
-    	System.out.println("----------------------------\n");
 
-    	System.out.print("Enter Your Choice: ");
-    	String choice = scanner.next();
-    	
-    	switch(choice.toLowerCase()){
-    		case "s":
-    			displayGenreMenu();
-    			break;
-    		case "n":
+	 public static void menu(Movie[][] do_part3) {
 
-    			break;
-    		case "x":
-    			System.exit(0);
-    			break;
-    	}
-    	
-    	scanner.close();
+			Movie[][] movies = do_part3;
+			boolean notFirstTime = false;
+			Scanner scanner = new Scanner(System.in);
+			int genreChoice = 0;
+			String choice = "";
+			String[] genres = {"musical", "comedy", "animation", "adventure", "drama",
+					"crime", "biography", "horror", "action", "documentary", "fantasy",
+					"mystery", "sci-fi", "family", "romance", "thriller", "western"};
+			
+			do {			
+				System.out.println("----------------------------");
+				System.out.println("\t"+"Main Menu");
+				System.out.println("----------------------------");
+				System.out.println(" s  "+"Select a movie array to navigate");
+				if(notFirstTime) {
+					String genre2 = genres[genreChoice-1];
+					if(movies[genreChoice-1][0] == null)
+					{
+						System.out.println(" n Navigate " + genre2 + " movies (" + (movies[genreChoice-1].length-1) + " recocrds)");
+					}
+					else
+						System.out.println(" n Navigate " + genre2 + " movies (" + (movies[genreChoice-1].length) + " recocrds)");
+				} else {
+					System.out.println(" n Navigate musical movies (" + (movies[0].length-1) + "recocrds)");	    		
+				}
+				System.out.println(" x  "+"Exit");
+				System.out.println("----------------------------\n");
 
-    }
+				System.out.print("Enter Your Choice: ");
+				choice = scanner.next();
+				notFirstTime = true;
 
+				switch(choice.toLowerCase()){
+				case "s":
+					displayGenreMenu();
+					System.out.print("Enter Your Choice: ");
+					scanner.next();
+					genreChoice = scanner.nextInt();
+					break;
+				case "n":
+
+					break;
+				case "x":
+					break;
+				}
+			}while(!choice.equals("x"));
+	    	scanner.close();
+
+	    }
