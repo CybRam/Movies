@@ -26,3 +26,33 @@ public static int displayGenreMenu()
 			key.close();			
 			return choice;
 	 }
+
+public static void menu(Movie[][] do_part3) {
+    	Scanner scanner = new Scanner(System.in);
+    	System.out.println("----------------------------");
+    	System.out.println("\t"+"Main Menu");
+    	System.out.println("----------------------------");
+    	System.out.println(" s  "+"Select a movie array to navigate");
+    	//option_n
+    	System.out.println(" x  "+"Exit");
+    	System.out.println("----------------------------\n");
+
+    	System.out.print("Enter Your Choice: ");
+    	String choice = scanner.next();
+    	
+    	switch(choice.toLowerCase()){
+    		case "s":
+    			displayGenreMenu();
+    			break;
+    		case "n":
+
+    			break;
+    		case "x":
+    			System.exit(0);
+    			break;
+    	}
+    	
+    	scanner.close();
+
+    }
+
