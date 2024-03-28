@@ -155,157 +155,157 @@ public static void navigate(int choice_n, Movie[][] movies, int genreChoice) {
     	} else if (choice_n+choice1 > -1) {
     		System.out.println("BOF has been reached");
     		return;
-    	} else if (choice_n > 0 && genreChoice-1 == 0 && (choice_n+choice1 < movies[genreChoice-1].length)) {
-    		for(int i = choice1; i < choice1+choice_n; i++) {
+    	} else if (choice_n > 0 && genreChoice-1 == 9 && (choice_n+choice9 < movies[genreChoice-1].length)) {
+    		for(int i = choice9; i < choice9+choice_n; i++) {
     			System.out.println(movies[genreChoice-1][i]);
     		}
-    		choice1 += choice_n;
-    	} else if (choice_n < 0 && genreChoice-1 == 0 && (choice_n+choice1 > -1)) {
+    		choice9 += choice_n;
+    	} else if (choice_n < 0 && genreChoice-1 == 9 && (choice_n+choice9 > -1)) {
     		choice_n = -choice_n;
-    		for(int i = choice1 ; i > choice1+choice_n; i--) {
+    		for(int i = choice9 ; i > choice9+choice_n; i--) {
     			System.out.println(movies[genreChoice-1][i]);
     		}
-    		choice1 -= choice_n;
-    	} else if (choice_n+choice1 > movies[genreChoice-1].length) {
+    		choice9 -= choice_n;
+    	} else if (choice_n+choice9 > movies[genreChoice-1].length) {
     		System.out.println("EOF has been reached");
     		return;
-    	} else if (choice_n+choice1 > -1) {
+    	} else if (choice_n+choice9 < 0) {
     		System.out.println("BOF has been reached");
     		return;
-    	} else if (choice_n > 0 && genreChoice-1 == 0 && (choice_n+choice1 < movies[genreChoice-1].length)) {
-    		for(int i = choice1; i < choice1+choice_n; i++) {
+    	} else if (choice_n > 0 && genreChoice-1 == 10 && (choice_n+choice10 < movies[genreChoice-1].length)) {
+    		for(int i = choice10; i < choice10+choice_n; i++) {
     			System.out.println(movies[genreChoice-1][i]);
     		}
-    		choice1 += choice_n;
-    	} else if (choice_n < 0 && genreChoice-1 == 0 && (choice_n+choice1 > -1)) {
+    		choice10 += choice_n;
+    	} else if (choice_n < 0 && genreChoice-1 == 10 && (choice_n+choice10 > -1)) {
     		choice_n = -choice_n;
-    		for(int i = choice1 ; i > choice1+choice_n; i--) {
+    		for(int i = choice10 ; i > choice10+choice_n; i--) {
     			System.out.println(movies[genreChoice-1][i]);
     		}
-    		choice1 -= choice_n;
-    	} else if (choice_n+choice1 > movies[genreChoice-1].length) {
+    		choice10 -= choice_n;
+    	} else if (choice_n+choice10 > movies[genreChoice-1].length) {
     		System.out.println("EOF has been reached");
     		return;
-    	} else if (choice_n+choice1 > -1) {
+    	} else if (choice_n+choice10 < 0) {
     		System.out.println("BOF has been reached");
     		return;
-    	} else if (choice_n > 0 && genreChoice-1 == 0 && (choice_n+choice1 < movies[genreChoice-1].length)) {
-    		for(int i = choice1; i < choice1+choice_n; i++) {
+    	} else if (choice_n > 0 && genreChoice-1 == 0 && (choice_n+choice11 < movies[genreChoice-1].length)) {
+    		for(int i = choice11; i < choice11+choice_n; i++) {
     			System.out.println(movies[genreChoice-1][i]);
     		}
-    		choice1 += choice_n;
-    	} else if (choice_n < 0 && genreChoice-1 == 0 && (choice_n+choice1 > -1)) {
+    		choice11 += choice_n;
+    	} else if (choice_n < 0 && genreChoice-1 == 0 && (choice_n+choice11 > -1)) {
     		choice_n = -choice_n;
-    		for(int i = choice1 ; i > choice1+choice_n; i--) {
+    		for(int i = choice11 ; i > choice11+choice_n; i--) {
     			System.out.println(movies[genreChoice-1][i]);
     		}
-    		choice1 -= choice_n;
-    	} else if (choice_n+choice1 > movies[genreChoice-1].length) {
+    		choice11 -= choice_n;
+    	} else if (choice_n+choice11 > movies[genreChoice-1].length) {
     		System.out.println("EOF has been reached");
     		return;
-    	} else if (choice_n+choice1 > -1) {
+    	} else if (choice_n+choice11 < 0) {
     		System.out.println("BOF has been reached");
     		return;
-    	} else if (choice_n > 0 && genreChoice-1 == 0 && (choice_n+choice1 < movies[genreChoice-1].length)) {
-    		for(int i = choice1; i < choice1+choice_n; i++) {
+    	} else if (choice_n > 0 && genreChoice-1 == 12 && (choice_n+choice12 < movies[genreChoice-1].length)) {
+    		for(int i = choice12; i < choice12+choice_n; i++) {
     			System.out.println(movies[genreChoice-1][i]);
     		}
-    		choice1 += choice_n;
-    	} else if (choice_n < 0 && genreChoice-1 == 0 && (choice_n+choice1 > -1)) {
+    		choice12 += choice_n;
+    	} else if (choice_n < 0 && genreChoice-1 == 12 && (choice_n+choice12 > -1)) {
     		choice_n = -choice_n;
-    		for(int i = choice1 ; i > choice1+choice_n; i--) {
+    		for(int i = choice12 ; i > choice12+choice_n; i--) {
     			System.out.println(movies[genreChoice-1][i]);
     		}
-    		choice1 -= choice_n;
-    	} else if (choice_n+choice1 > movies[genreChoice-1].length) {
+    		choice12 -= choice_n;
+    	} else if (choice_n+choice12 > movies[genreChoice-1].length) {
     		System.out.println("EOF has been reached");
     		return;
-    	} else if (choice_n+choice1 > -1) {
+    	} else if (choice_n+choice12 < 0) {
     		System.out.println("BOF has been reached");
     		return;
-    	} else if (choice_n > 0 && genreChoice-1 == 0 && (choice_n+choice1 < movies[genreChoice-1].length)) {
-    		for(int i = choice1; i < choice1+choice_n; i++) {
+    	} else if (choice_n > 0 && genreChoice-1 == 13 && (choice_n+choice13 < movies[genreChoice-1].length)) {
+    		for(int i = choice13; i < choice13+choice_n; i++) {
     			System.out.println(movies[genreChoice-1][i]);
     		}
-    		choice1 += choice_n;
-    	} else if (choice_n < 0 && genreChoice-1 == 0 && (choice_n+choice1 > -1)) {
+    		choice13 += choice_n;
+    	} else if (choice_n < 0 && genreChoice-1 == 13 && (choice_n+choice13 > -1)) {
     		choice_n = -choice_n;
-    		for(int i = choice1 ; i > choice1+choice_n; i--) {
+    		for(int i = choice13 ; i > choice13+choice_n; i--) {
     			System.out.println(movies[genreChoice-1][i]);
     		}
-    		choice1 -= choice_n;
-    	} else if (choice_n+choice1 > movies[genreChoice-1].length) {
+    		choice13 -= choice_n;
+    	} else if (choice_n+choice13 > movies[genreChoice-1].length) {
     		System.out.println("EOF has been reached");
     		return;
-    	} else if (choice_n+choice1 > -1) {
+    	} else if (choice_n+choice13 < 0) {
     		System.out.println("BOF has been reached");
     		return;
-    	} else if (choice_n > 0 && genreChoice-1 == 0 && (choice_n+choice1 < movies[genreChoice-1].length)) {
-    		for(int i = choice1; i < choice1+choice_n; i++) {
+    	} else if (choice_n > 0 && genreChoice-1 == 14 && (choice_n+choice14 < movies[genreChoice-1].length)) {
+    		for(int i = choice14; i < choice14+choice_n; i++) {
     			System.out.println(movies[genreChoice-1][i]);
     		}
-    		choice1 += choice_n;
-    	} else if (choice_n < 0 && genreChoice-1 == 0 && (choice_n+choice1 > -1)) {
+    		choice14 += choice_n;
+    	} else if (choice_n < 0 && genreChoice-1 == 14 && (choice_n+choice14 > -1)) {
     		choice_n = -choice_n;
-    		for(int i = choice1 ; i > choice1+choice_n; i--) {
+    		for(int i = choice14 ; i > choice14+choice_n; i--) {
     			System.out.println(movies[genreChoice-1][i]);
     		}
-    		choice1 -= choice_n;
-    	} else if (choice_n+choice1 > movies[genreChoice-1].length) {
+    		choice14 -= choice_n;
+    	} else if (choice_n+choice14 > movies[genreChoice-1].length) {
     		System.out.println("EOF has been reached");
     		return;
-    	} else if (choice_n+choice1 > -1) {
+    	} else if (choice_n+choice14 < 0) {
     		System.out.println("BOF has been reached");
     		return;
-    	} else if (choice_n > 0 && genreChoice-1 == 0 && (choice_n+choice1 < movies[genreChoice-1].length)) {
-    		for(int i = choice1; i < choice1+choice_n; i++) {
+    	} else if (choice_n > 0 && genreChoice-1 == 15 && (choice_n+choice15 < movies[genreChoice-1].length)) {
+    		for(int i = choice15; i < choice15+choice_n; i++) {
     			System.out.println(movies[genreChoice-1][i]);
     		}
-    		choice1 += choice_n;
-    	} else if (choice_n < 0 && genreChoice-1 == 0 && (choice_n+choice1 > -1)) {
+    		choice15 += choice_n;
+    	} else if (choice_n < 0 && genreChoice-1 == 15 && (choice_n+choice15 > -1)) {
     		choice_n = -choice_n;
-    		for(int i = choice1 ; i > choice1+choice_n; i--) {
+    		for(int i = choice15 ; i > choice15+choice_n; i--) {
     			System.out.println(movies[genreChoice-1][i]);
     		}
-    		choice1 -= choice_n;
-    	} else if (choice_n+choice1 > movies[genreChoice-1].length) {
+    		choice15 -= choice_n;
+    	} else if (choice_n+choice15 > movies[genreChoice-1].length) {
     		System.out.println("EOF has been reached");
     		return;
-    	} else if (choice_n+choice1 > -1) {
+    	} else if (choice_n+choice15 < 0) {
     		System.out.println("BOF has been reached");
     		return;
-    	} else if (choice_n > 0 && genreChoice-1 == 0 && (choice_n+choice1 < movies[genreChoice-1].length)) {
-    		for(int i = choice1; i < choice1+choice_n; i++) {
+    	} else if (choice_n > 0 && genreChoice-1 == 16 && (choice_n+choice16 < movies[genreChoice-1].length)) {
+    		for(int i = choice16; i < choice16+choice_n; i++) {
     			System.out.println(movies[genreChoice-1][i]);
     		}
-    		choice1 += choice_n;
-    	} else if (choice_n < 0 && genreChoice-1 == 0 && (choice_n+choice1 > -1)) {
+    		choice16 += choice_n;
+    	} else if (choice_n < 0 && genreChoice-1 == 16 && (choice_n+choice16 > -1)) {
     		choice_n = -choice_n;
-    		for(int i = choice1 ; i > choice1+choice_n; i--) {
+    		for(int i = choice16 ; i > choice16+choice_n; i--) {
     			System.out.println(movies[genreChoice-1][i]);
     		}
-    		choice1 -= choice_n;
-    	} else if (choice_n+choice1 > movies[genreChoice-1].length) {
+    		choice16 -= choice_n;
+    	} else if (choice_n+choice16 > movies[genreChoice-1].length) {
     		System.out.println("EOF has been reached");
     		return;
-    	} else if (choice_n+choice1 > -1) {
+    	} else if (choice_n+choice16 < 0) {
     		System.out.println("BOF has been reached");
     		return;
-    	} else if (choice_n > 0 && genreChoice-1 == 0 && (choice_n+choice1 < movies[genreChoice-1].length)) {
-    		for(int i = choice1; i < choice1+choice_n; i++) {
+    	} else if (choice_n > 0 && genreChoice-1 == 17 && (choice_n+choice17 < movies[genreChoice-1].length)) {
+    		for(int i = choice17; i < choice17+choice_n; i++) {
     			System.out.println(movies[genreChoice-1][i]);
     		}
-    		choice1 += choice_n;
-    	} else if (choice_n < 0 && genreChoice-1 == 0 && (choice_n+choice1 > -1)) {
+    		choice17 += choice_n;
+    	} else if (choice_n < 0 && genreChoice-1 == 17 && (choice_n+choice17 > -1)) {
     		choice_n = -choice_n;
-    		for(int i = choice1 ; i > choice1+choice_n; i--) {
+    		for(int i = choice17 ; i > choice17+choice_n; i--) {
     			System.out.println(movies[genreChoice-1][i]);
     		}
-    		choice1 -= choice_n;
-    	} else if (choice_n+choice1 > movies[genreChoice-1].length) {
+    		choice17 -= choice_n;
+    	} else if (choice_n+choice17 > movies[genreChoice-1].length) {
     		System.out.println("EOF has been reached");
     		return;
-    	} else if (choice_n+choice1 > -1) {
+    	} else if (choice_n+choice17 < 0) {
     		System.out.println("BOF has been reached");
     		return;
     	}
